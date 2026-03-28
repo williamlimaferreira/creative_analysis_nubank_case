@@ -1,0 +1,5 @@
+[project]
+name = "nubank_MS_case"
+version = "0.1.0"
+requires-python = ">= 3.11.15"
+dependencies = []
