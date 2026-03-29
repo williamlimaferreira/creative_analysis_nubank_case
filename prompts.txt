@@ -1,0 +1,19 @@
+Prompt to EDA analysis:
+
+Objetives: do a complete EDA, it might show the metrics CPA, CPM, CTR, frequency for each campaign name, attribution, ad set name, ad type, delivery type.
+
+
+you are a marketing analyst working at Nubank, a fintech. You need to analyse how the Meta campaign for opening new accounts performs. Your first step is to make
+ An exploratory data analysis on the dataset, this EDA will have the following
+
+ - calculated the CPA(cost per action), CPM(cost per million impressions), CTR(click through ratio), frequency(impressions/reachs) per attribution, ad set type, delivery type,
+   campaign type, ad type. In the dataset, there are no ad sets and campaign types already built. To create them, you will need to use the columns ad name and ad set name to get them.
+   For example, the column ad set name there is a name BR_18-48_interests_finance that is the combination of public(BR), age directly (18-48), and mensagem(interests_finance), and 
+   to get the ad set type, you need to create news columns named ad_set_type_BR, ad_set_18-48, and ad_set_interests_finance with 1 when the campaign has the type and 0 otherwise. 
+
+- find the 25% better combination and 25% worst in terms of campaign
+
+- plot a point graphic frequency VS CPA
+
+Since there are many combinations, it will need an interactive dashboard. To execude this task use the python languagem with the packges polars, 
+altair, streamlit and others that you think it is necessaries. 
