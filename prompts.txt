@@ -17,3 +17,47 @@ you are a marketing analyst working at Nubank, a fintech. You need to analyse ho
 
 Since there are many combinations, it will need an interactive dashboard. To execude this task use the python languagem with the packges polars, 
 altair, streamlit and others that you think it is necessaries. 
+
+
+You are a marketing analyst working at Nubank, a digital bank(fintech), and were assigned the function of analysing the marketing campaigns that run at Meta. To do this job
+A dataset with the following columns was given to you:
+
+- Spend (BRL): value spent with the AD
+- Impressions: total number of times the AD was shown
+- Reach: total of unique people who see the AD
+- Frequency: How many times a person sees the AD
+- Link Clicks: Total of clicks the AD generated.
+- Conversions: Total of Conversions that make
+- Attribution Setting: type of attribution used in the AD
+- Delivery Status: what is the delivery status(learning, learning limit, etc)
+- Reporting Start: start date
+- Reporting End: End date
+- Campaign Type: whether the campaign is E-commerce or Branding
+- Ad Set Name: the ad set's name, this name gives a series of information about the ADs, for example, the name BR_18-48_interests_finance gives the location(BR),
+ the targe age(18-48) and the method used(interests_finance).
+ Ad Name: the AD's name, it also gives valuable information, as the example: Nu_Brand_Awareness_Hero_Video_15s, which informs that it is a branding(Brand) focus in awareness(Awareness)
+ and a its format is a video(Video) with 15 secunds(15s)
+ - Result Type: the main objective
+
+The first step to finish this task is to calculate the following metrics
+
+CTR = Link Clicks / Impressions
+CPC = Spend / Link Clicks
+CVR (Click → Conversion) = Conversions / Link Clicks
+CPA = Spend / Conversions
+CPM = (Spend / Impressions) × 1000
+Conversions per 1,000 impressions
+Conversions per 1,000 people reached
+
+per attribution, ad set type, delivery type, campaign type, ad type. To calculate the ad set type and ad type, it will be necessary to create a set of new columns,
+These columns have the following format
+
+in the case of Ad set name: the name BR_18-48_interests_finance genered the columns ad_set_Br, ad_set_18-48, ad_set_interests_finance and in each has 1. this
+The procedure must be followed for all the ad set names, where for a name x_y_z, the columns ad_set_x, ad_set_y, and ad_set_z need to be created with value 1, and if one of
+the names(x, y, z) already exists. It is necessary to put the value 1 in the column.
+
+the same procedure must be followed for the Ad Name, for example, Nu_Brand_Awareness_Hero_Video_15s, the columns ad_name_Nu_Brand, ad_name_Awareness, ad_name_Hero, 
+ad_name_Video and ad_name_15s will be created with values 1 to the specific ad.
+
+Use the python languagem to make the analysis, with the packages seaborn, polars.
+ 
