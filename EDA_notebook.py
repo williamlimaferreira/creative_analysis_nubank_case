@@ -7,7 +7,7 @@
 
 import marimo
 
-__generated_with = "0.23.3"
+__generated_with = "0.23.4"
 app = marimo.App(width="full", auto_download=["html"])
 
 
@@ -443,12 +443,17 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    O que fazer na EDA:
+    Antes de tomar qualquer decisão ou construir um modelo, é fundamental realizar uma análise exploratória dos dados. Essa etapa tem como objetivo principal aprofundar o conhecimento sobre o conjunto disponível e validar hipóteses já existentes.
 
-    - Estudar o CTR, CPC, CVR, CPA e CPM de forma geral e por tipo de campanha
-    - estudar conversões por 1k de impressões
-    - estudar conversões por 1k de reachs
-    - encontra as top e bottom campanhas com base nas características de ad set e ad
+    Como o propósito do trabalho é identificar quais campanhas apresentam melhor performance, esse será o nosso foco. O primeiro passo, portanto, consiste em definir as métricas que traduzem o desempenho de uma campanha.
+
+    O Nubank busca acelerar o número de contas abertas. À primeira vista, seria natural avaliar a performance das campanhas apenas por esse indicador. No entanto, essa visão é limitada, pois não considera os custos envolvidos nem o valor que esses clientes trarão ao longo do tempo.
+
+    Para capturar essas relações de forma mais completa, selecionamos quatro métricas principais: **CPA**, **LTV**, **conversions per 1k impressions** e **reach**.
+
+    Assim, devemos identificar as campanhas que:
+    - geram o maior número de contas abertas por 1.000 impressões (reach);
+    - apresentam a melhor relação \(\frac{LTV}{CPA}\), ou seja, maior valor de vida útil por custo de aquisição.
     """)
     return
 
@@ -464,7 +469,11 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Analisando o CTR, CPC, CVR, CPA e CPM das campanhas agregados pelo tipo de objetivo, E-Commerce ou D&R, temos
+    Os anúncios podem ser classificados em dois grupos principais:
+    - **Branding**: voltados para aumentar o reconhecimento da marca e reforçar sua mensagem.
+    - **E-commerce (D&R)**: focados exclusivamente em gerar uma ação específica — no nosso caso, a abertura de conta.
+
+    A primeira etapa da análise será concentrada nesses dois grupos. As métricas **CTR, CPC, CVR, CPA e CPM** serão comparadas entre eles, com o objetivo de identificar qual tipo de anúncio apresenta melhor desempenho. O histograma do CTR por tipo de campanha
     """)
     return
 
@@ -492,6 +501,14 @@ def _(alt, df_new, mo, pl):
 
 
     CTR_histograma(df_new)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Mostra que campanhas do tipo E-commerce producem mais clicks. No caso do CPC, CVR, CPA e CPM, temos
+    """)
     return
 
 
@@ -558,7 +575,101 @@ def _(alt, df_new, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Que o tipo de campanhas influencia nos resultados das métricas analisadas, em especial no caso do CPA onde há uma clara distinçao, onde as campanhas do tipo D&R apresentando resultados bem superiores.
+    novamente as campanhas do tipo E-commerce se mostraram superior, em expecial na comparação do **CPA**, onde há uma clara difrença entre as duas. Estudando a relação entre o **CPA** e frequência, temos
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(alt, df_new, mo, pl):
+    def _(dataset: pl.DataFrame):
+        # calcular média e desvio padrão
+        mean_cpa = dataset["CPA"].mean()
+        std_cpa = dataset["CPA"].std()
+        y_min = mean_cpa - 2 * std_cpa
+        y_max = mean_cpa + 2 * std_cpa
+
+        mean_cpa_branding = dataset.filter(pl.col("Campaign_Type") == "Branding")[
+            "CPA"
+        ].mean()
+        std_cpa_branding = dataset.filter(pl.col("Campaign_Type") == "Branding")[
+            "CPA"
+        ].std()
+        y_min_branding = mean_cpa_branding - 2 * std_cpa_branding
+        y_max_branding = mean_cpa_branding + 2 * std_cpa_branding
+
+        mean_cpa_dr = dataset.filter(pl.col("Campaign_Type") == "E-commerce")[
+            "CPA"
+        ].mean()
+        std_cpa_dr = dataset.filter(pl.col("Campaign_Type") == "E-commerce")[
+            "CPA"
+        ].std()
+        y_min_dr = mean_cpa_dr - 2 * std_cpa_dr
+        y_max_dr = mean_cpa_dr + 2 * std_cpa_dr
+
+        # gráfico original
+        chart_all = (
+            alt.Chart(dataset)
+            .mark_line()
+            .encode(
+                x=alt.X("Frequency:Q", title="frequência"),
+                y=alt.Y(
+                    "mean(CPA):Q",
+                    title="CPA médio",
+                ),
+            )
+            .properties(width=800, height=130, title="Frequência vs CPA")
+        )
+
+        # gráfico para Branding
+        chart_branding = (
+            alt.Chart(dataset.filter(pl.col("Campaign_Type") == "Branding"))
+            .mark_line(color="blue")
+            .encode(
+                x=alt.X("Frequency:Q", title="frequência"),
+                y=alt.Y(
+                    "mean(CPA):Q",
+                    title="CPA médio",
+                    scale=alt.Scale(domain=(y_min_branding, y_max_branding)),
+                ),
+            )
+            .properties(width=410, height=130, title="Branding")
+        )
+
+        # gráfico para E-commerce
+        chart_ecommerce = (
+            alt.Chart(dataset.filter(pl.col("Campaign_Type") == "E-commerce"))
+            .mark_line(color="green")
+            .encode(
+                x=alt.X("Frequency:Q", title="frequência"),
+                y=alt.Y(
+                    "mean(CPA):Q",
+                    title="CPA médio",
+                    scale=alt.Scale(domain=(y_min_dr, y_max_dr)),
+                ),
+            )
+            .properties(width=410, height=130, title="E-commerce")
+        )
+
+        # organizar os gráficos
+        combined = alt.vconcat(
+            chart_all, alt.hconcat(chart_branding, chart_ecommerce)
+        )
+
+        return mo.ui.altair_chart(combined)
+
+
+    _(df_new)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Vemos que o **CPA** permanece constante conforme a frequência varia para ambos os tipos de campanhas e que campanhas do tipo E-commerce possuem **CPA** menor que as de braiding em qualquer frequência. Juntando as informações, conclui-se que
+
+    - As campanhas de D&R são superiores em todas as métricas analisadas, em especial no caso do **CPA**
+    - Não há frequência de saturação no intervalo observado para ambos os tipos de campanha.
     """)
     return
 
@@ -574,7 +685,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    A nossa exploração já mostrou que as campanhas de D&R têm um desempenho superior as de E-commerce, mas ainda precisamos estuda mais a fundo os dados para tormar uma decisão. Analisando o desempenho das campanhas por novas métricas e modelos de atribuições, temos
+    A nossa análise já indica que as campanhas de D&R apresentam desempenho superior em relação às de E-commerce. No entanto, ainda é necessário aprofundar o estudo dos dados antes de tomar uma decisão definitiva. Ao avaliar os resultados pelas métricas de volume e pelos diferentes modelos de atribuição, observamos
     """)
     return
 
@@ -676,7 +787,9 @@ def _(alt, df_new, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Analisando os gráficos acima, verifica-se que campanhas com o modelo de atribuição 7-day click, 1-day view têm o desempenho melhor, mas esse resultado já era esperado, pois a janela de atribuição é bem maior que a do concorrente. Outro resultado esperado é a performance das campanhas de resposta direta (D&R) se saírem melhores do que as de branding. A performance de ambos os tipos de campanhas não possui uma tendência clara ao longo do tempo. Também não há correlação entre frequência e as conversões por 1k de impressões. Agora verificando o resultados por 1k de reaches, temos
+    A análise dos gráficos mostra que as campanhas com o modelo de atribuição *7-day click, 1-day view* apresentam melhor desempenho. Esse resultado já era esperado, uma vez que a janela de atribuição é significativamente maior do que a utilizada pelo concorrente. Também era previsível que as campanhas de D&R superassem as de branding.
+
+    No entanto, observa-se que a performance de ambos os tipos de campanha não revela uma tendência consistente ao longo do tempo. Além disso, não há correlação entre a frequência e as conversões por mil impressões. Já ao avaliar os resultados por mil *reaches*, verificamos que
     """)
     return
 
@@ -777,7 +890,7 @@ def _(alt, df_new, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Que os resultados permanecem identicos.
+    Que os resultados permanecem identicos, com novamente as campanhas de D&R tendo melhor perfomace em dos os paramêntros
     """)
     return
 
@@ -785,7 +898,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Análise De AD Sets E ADs
+    ### Resultados
     """)
     return
 
@@ -793,7 +906,23 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    T
+    A primeira parte da análise exploratória já trouxe um resultado claro: a superioridade das campanhas D&R sobre Branding em todas as métricas. Desta forma, o primeiro insight é fazer uso apenas de campanhas D&R para maximizar o volume de contas abertas com o menor custo. Com a exploração no nível de campanha encerrada, seguimos para o nível dos ads set e ads.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Análise De AD Sets
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Na análise dos ad sets buscamos encontrar quais características mais reduzem/aumenta o CPA da campanha. Pelos gráficos abaixo, vemos
     """)
     return
 
@@ -810,7 +939,7 @@ def _(alt, df_new, mo, pl):
             n = (
                 dataset.filter(pl.col("Campaign_Type") == "E-commerce")
                 .group_by(nome)
-                .agg(pl.col("CPA").mean().alias(f"CPA_mean"))
+                .agg(pl.col("CPA").mean().alias("CPA_mean"))
                 .sort(nome, descending=False)
                 .with_columns(pl.col("CPA_mean").diff())
                 .filter(pl.col(nome) == 1)
@@ -860,7 +989,35 @@ def _(alt, df_new, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    O gráfico acima mostra que ads sets focados nos públicos de 18 a 24 e 18 a 44 têm CPA menor, de forma semelhante, campanhas focadas nos concorrentes performam melhor, em torno de $-3$ reais. Já aqueles com foco no público 25 a 34, Looklike e High internet apresentam o pior desempenho, em torno de $+5$ reais. No nível dos ads, temos
+    Que as propriedades do ad set não possuem grande influência no CPA, o que não reduz a importância da análise, pois a otimização de uma campanha se dá por meio de pequenos passos. Sendo as características que aumentam o **CPA**:
+
+    - campanhas lookalike
+    - High internet
+    - voltada para o público 25-34
+
+      que têm em média um **CPA** $5$ reais mais alto. Já aquelas que mais reduzem, são:
+
+    - voltadas para os públicos 18-24 ou 18-44
+    - foca em usuários de celular
+    - trazer usuários dos concorrentes.
+
+    com um **CPA** médio de $3$ reais menor.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Análise De ADs
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    No caso dos ads, temos
     """)
     return
 
@@ -927,7 +1084,35 @@ def _(alt, df_new, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Que ads voltados para seguro de vida, cartão virtual, conta digital e vídeos curtos, $30s$, têm desempenho melhor, com um CPA $-7$ reais. Enquanto ads com foco em bônus, anualidade zero e seguros no geral mostra-se piores, com CPA $+10$ reais.
+    que ads com foco
+
+    - em bônus
+    - anualidade zero
+    - seguros no geral
+
+    têm um **CPA** $10$ reais mais alto na média, enquanto os com
+
+    - vídeos de $30s$
+    - cartão virtual
+    - conta digital
+
+    possuem o **CPA** $7$ reais mais baixo na média.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Resultados
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    As comfinfurações a nível de ad sets e ads não geram tanto impacto quanto as no nívem de campanha, entrentanto ainda podemos usar as informações obititas para otimizar futuras campanhas.
     """)
     return
 
