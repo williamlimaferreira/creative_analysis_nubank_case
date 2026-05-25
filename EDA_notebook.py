@@ -7,55 +7,26 @@
 
 import marimo
 
-__generated_with = "0.23.4"
+__generated_with = "0.23.8"
 app = marimo.App(width="full", auto_download=["html"])
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Faça uma análise dos dados destas campanhas do NuBank **(Campanhas SImuladas)**
+    # Contexto do Case
+    """)
+    return
 
-    Os exemplos abaixo são de referência; você pode criar da maneira que achar mais adequada de acordo com o que foi aprendido no curso até o momento.
 
-    CASE: Nubank – Análise de Performance e Planejamento de Próximas Campanhas
-
-    ## Contexto do Case
-
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     Você foi contratado como **Digital Marketing Analyst** do Nubank para analisar campanhas rodadas no Meta Ads durante o Q1. 1.
 
     O Nubank deseja acelerar a **abertura de contas digitais** utilizando Meta Ads (Facebook, Instagram e Audience Network). A operação já está rodando há alguns meses, com campanhas ativas em diferentes objetivos.
 
     O time interno percebeu crescimento em volume, mas não tem clareza sobre a eficiência real do investimento, nem sobre o impacto incremental das campanhas.
-
-    ---
-
-    A base de dados contém:
-
-    - Campanhas de **Branding** e **Conversão (Account Opening)**
-
-    - Métricas de:
-
-        - Spend (BRL)
-
-        - Impressions
-
-        - Reach
-
-        - Frequency
-
-        - Link Clicks
-
-        - Conversions
-
-        - Attribution Setting
-
-        - Delivery Status
-
-
-    O objetivo do Nubank é:
-
-    Maximizar Account Openings mantendo eficiência de mídia e escalabilidade.
     """)
     return
 
@@ -86,19 +57,66 @@ def _(mo):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    O pacotes usados nesse trabalho são:
+
+    ---
+
+    ## 📦
+
+    - **pandas**: Biblioteca para análise e manipulação de dados em tabelas (*DataFrames*).
+    - **polars**: Alternativa moderna ao pandas, otimizada para velocidade e uso eficiente de memória.
+    - **numpy**: Ferramenta para cálculos numéricos e manipulação de arrays multidimensionais.
+    - **pyarrow**: Suporte para o formato Apache Arrow, usado em processamento de dados em memória.
+
+    ### Estatística e Machine Learning
+    - **statsmodels**: Biblioteca para modelagem estatística, regressões e testes de hipóteses.
+    - **scikit-learn (sklearn)**: Conjunto de algoritmos de machine learning e ferramentas de pré-processamento.
+
+    ### Visualização de dados
+    - **altair**: Biblioteca declarativa para criação de gráficos interativos e estatísticos.
+    - **plotly**: Interface simples para gerar gráficos interativos rapidamente.
+
+    ### Ferramentas adicionais
+    - **marimo**: Framework para criar notebooks interativos e aplicações de dados em Python.
+
+    ---
+    """)
+    return
+
+
 @app.cell
 def _():
-    import marimo as mo
+    # Bibliotecas de manipulação de dados
+    import pandas as pd
     import polars as pl
     import numpy as np
+    import pyarrow
+
+    # Bibliotecas de modelagem estatística e machine learning
+    import statsmodels.formula.api as smf
+    from sklearn.linear_model import LinearRegression
+
+    # Visualização de dados
     import altair as alt
+    import plotly.express as px
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
 
-    import asyncio
-    import sys
+    # Ferramentas adicionais
+    import marimo as mo
 
-    if sys.platform == "win32":
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    return alt, mo, pl
+
+    # alt.data_transformers.enable("vegafusion")
+
+    # import asyncio
+    # import sys
+
+    # if sys.platform == "win32":
+    #     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    return LinearRegression, alt, mo, pl, px, smf
 
 
 @app.cell(hide_code=True)
@@ -111,9 +129,10 @@ def _(mo):
 
 @app.cell
 def _(pl):
-    file_path = "D:\\portifolio\\python projects\\nubank_case\\nubank_MS_case\\data\\Nubank_ads_data.csv"
+    file_path = "D:\\portifolio\\python projects\\nubank_case\\nubank_MS_case\\data\\Nubank_ads_data.parquet"
 
-    df = pl.read_csv(file_path)
+    # df = pl.read_csv(file_path)
+    df = pl.read_parquet(file_path)
     return (df,)
 
 
@@ -238,7 +257,15 @@ def _(df, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    O resultado da validação mostrou
+    ### Resultados
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Verifico-se que no dataset
 
     ✅ Não há valores faltantes no dataset.
 
@@ -276,7 +303,12 @@ def _(mo):
 
     - Conversões por 1.000 pessoas alcançadas
 
-    Todas têm como objetivo facilitar o estudo da performance das campanhas. Além dessas novas métricas, também serão criadas novas colunas com as informações contidas no "Ad Set Name" e "Ad Set Name", por exemplo, no caso, ad set name "BR_18-24_Students" duas novas colunas serão criadas, ad_name_18-24 e ad_name_students, e os seus valores serão 1, para representar as características do ad.
+    Que têm como objetivo facilitar o estudo da performance das campanhas. Além dessas novas métricas, também serão criadas novas colunas com as informações contidas no "Ad Set Name" e "Ad Set Name", por exemplo, no caso, ad set name "**BR_18-24_Students**" serão criadas duas novas colunas,
+
+    - ad_name_18-24
+    - ad_name_students
+
+    Cada uma contendo o valor 1, que representa as características do ad set e do ad.
     """)
     return
 
@@ -447,13 +479,21 @@ def _(mo):
 
     Como o propósito do trabalho é identificar quais campanhas apresentam melhor performance, esse será o nosso foco. O primeiro passo, portanto, consiste em definir as métricas que traduzem o desempenho de uma campanha.
 
-    O Nubank busca acelerar o número de contas abertas. À primeira vista, seria natural avaliar a performance das campanhas apenas por esse indicador. No entanto, essa visão é limitada, pois não considera os custos envolvidos nem o valor que esses clientes trarão ao longo do tempo.
+    O Nubank busca acelerar o número de contas abertas. À primeira vista, seria natural avaliar a performance das campanhas apenas por esse indicador. No entanto, essa visão é limitada, pois não considera os custos envolvidos para consegui-los, nem o valor que esses clientes trarão ao longo do tempo.
 
-    Para capturar essas relações de forma mais completa, selecionamos quatro métricas principais: **CPA**, **LTV**, **conversions per 1k impressions** e **reach**.
+    Para capturar a performance real da campanha, precisamos de quatro métricas principais: **CPA**, **LTV**, **conversions per 1k impressions** e **reach**. Onde
 
-    Assim, devemos identificar as campanhas que:
+    - Custo por Aquisição(**CPA**): informa o custo do Nubank para adquirir o cliente.
+    - Lifetime value(**LTV**): informa o retorno que o cliente vai trazer ao longo de toda a sua "vida".
+    - **conversions per 1k impressions**: indica o quanto a campanha foi eficiente em estimular as pessoas que a visualizaram a abrir uma conta.
+    **conversions per 1k reach**: indica o quanto a campanha foi eficiente em estimular as pessoas a abrirem uma conta.
+
+    e os indicadores de qualidade da campanha, são
+
     - geram o maior número de contas abertas por 1.000 impressões (reach);
     - apresentam a melhor relação \(\frac{LTV}{CPA}\), ou seja, maior valor de vida útil por custo de aquisição.
+
+    Porém como não é possível calcular o **LTV** com os dados a que temos acesso, temos que minimizar o **CPA** para maximizar o segundo indicado.
     """)
     return
 
@@ -469,11 +509,12 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Os anúncios podem ser classificados em dois grupos principais:
-    - **Branding**: voltados para aumentar o reconhecimento da marca e reforçar sua mensagem.
-    - **E-commerce (D&R)**: focados exclusivamente em gerar uma ação específica — no nosso caso, a abertura de conta.
+    Começamos a análise com o estudo dos tipos de campanhas, que são
 
-    A primeira etapa da análise será concentrada nesses dois grupos. As métricas **CTR, CPC, CVR, CPA e CPM** serão comparadas entre eles, com o objetivo de identificar qual tipo de anúncio apresenta melhor desempenho. O histograma do CTR por tipo de campanha
+    - **Branding**: voltado para aumentar o reconhecimento da marca e reforçar sua mensagem.
+    - **E-commerce (D&R)**: focado exclusivamente em gerar uma ação específica — no nosso caso, a abertura de conta.
+
+    Onde as métricas **CTR, CPC, CVR, CPA e CPM** serão comparadas entre os dois grupos, com o objetivo de identificar qual tipo de anúncio apresenta melhor desempenho. No histograma do **CPR**, temos
     """)
     return
 
@@ -507,7 +548,7 @@ def _(alt, df_new, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Mostra que campanhas do tipo E-commerce producem mais clicks. No caso do CPC, CVR, CPA e CPM, temos
+    que campanhas do tipo E-commerce producem mais clicks. Já no caso do CPC, CVR, CPA e CPM, temos
     """)
     return
 
@@ -575,7 +616,7 @@ def _(alt, df_new, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    novamente as campanhas do tipo E-commerce se mostraram superior, em expecial na comparação do **CPA**, onde há uma clara difrença entre as duas. Estudando a relação entre o **CPA** e frequência, temos
+    Novamente as campanhas do tipo E-commerce se mostraram superiores, em especial na comparação do **CPA**, onde há uma clara diferença entre as duas. Estudando a relação entre o **CPA** e frequência, temos
     """)
     return
 
@@ -666,7 +707,7 @@ def _(alt, df_new, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Vemos que o **CPA** permanece constante conforme a frequência varia para ambos os tipos de campanhas e que campanhas do tipo E-commerce possuem **CPA** menor que as de braiding em qualquer frequência. Juntando as informações, conclui-se que
+    Vemos que o **CPA** permanece constante conforme a frequência varia, no intervalo, para ambos os tipos de campanhas e que campanhas do tipo E-commerce possuem **CPA** menor que as de braiding em qualquer frequência. Juntando as informações, conclui-se que
 
     - As campanhas de D&R são superiores em todas as métricas analisadas, em especial no caso do **CPA**
     - Não há frequência de saturação no intervalo observado para ambos os tipos de campanha.
@@ -677,7 +718,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Performace Por 1k De impressões e Reaches
+    ## Performace Por 1k De impressões e Reaches
     """)
     return
 
@@ -685,7 +726,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    A nossa análise já indica que as campanhas de D&R apresentam desempenho superior em relação às de E-commerce. No entanto, ainda é necessário aprofundar o estudo dos dados antes de tomar uma decisão definitiva. Ao avaliar os resultados pelas métricas de volume e pelos diferentes modelos de atribuição, observamos
+    A análise inicial já indica que as campanhas de D&R apresentam desempenho superior em relação às de branding. No entanto, ainda é necessário aprofundar o estudo nas métricas de volume e nos modelos de atribuição para tomar uma decisão definitiva. Ao avaliar os resultados pelas métricas de volume e pelos diferentes modelos de atribuição, observamos
     """)
     return
 
@@ -787,9 +828,9 @@ def _(alt, df_new, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    A análise dos gráficos mostra que as campanhas com o modelo de atribuição *7-day click, 1-day view* apresentam melhor desempenho. Esse resultado já era esperado, uma vez que a janela de atribuição é significativamente maior do que a utilizada pelo concorrente. Também era previsível que as campanhas de D&R superassem as de branding.
+    A análise dos gráficos mostra que as campanhas com o modelo de atribuição *7-day click, 1-day view* apresentam melhor desempenho. Resultado já esperado, uma vez que a janela de atribuição é significativamente maior do que a utilizada pelo concorrente. Também era previsível que as campanhas de D&R superassem as de branding.
 
-    No entanto, observa-se que a performance de ambos os tipos de campanha não revela uma tendência consistente ao longo do tempo. Além disso, não há correlação entre a frequência e as conversões por mil impressões. Já ao avaliar os resultados por mil *reaches*, verificamos que
+    No entanto, observa-se que a performance de ambos os tipos de campanha não demonstra qualquer tendência consistente ao longo do tempo. Além disso, não há correlação entre a frequência e as conversões por mil impressões. Já ao avaliar os resultados por mil *reaches*, verificamos que
     """)
     return
 
@@ -890,7 +931,7 @@ def _(alt, df_new, mo, pl):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Que os resultados permanecem identicos, com novamente as campanhas de D&R tendo melhor perfomace em dos os paramêntros
+    Que os resultados permanecem identicos, com novamente as campanhas de D&R tendo melhor perfomace em todos os paramêntros
     """)
     return
 
@@ -922,7 +963,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Na análise dos ad sets buscamos encontrar quais características mais reduzem/aumenta o CPA da campanha. Pelos gráficos abaixo, vemos
+    Na análise dos ad sets buscamos encontrar quais características reduzem/aumenta o CPA da campanha. Pelos gráficos abaixo, vemos
     """)
     return
 
@@ -1001,7 +1042,104 @@ def _(mo):
     - foca em usuários de celular
     - trazer usuários dos concorrentes.
 
-    com um **CPA** médio de $3$ reais menor.
+    com um **CPA** médio de $3$ reais menor. Olhando para o 25% top quartil e o inferior, temos
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(df_new, mo, pl):
+    def gerar_ui_dashboard(dataset: pl.DataFrame):
+        columns_names = dataset.select(pl.col("^.*ad_set_.*$")).columns
+
+        dataset_diff = pl.DataFrame()
+
+        for nome in columns_names:
+            n = (
+                dataset.filter(pl.col("Campaign_Type") == "E-commerce")
+                .group_by(nome)
+                .agg(pl.col("CPA").mean().alias("CPA_mean"))
+                .sort(nome, descending=False)
+                .with_columns(pl.col("CPA_mean").diff())
+                .filter(pl.col(nome) == 1)
+            )
+
+            n = n.rename({nome: "ad_set"}).with_columns(
+                pl.lit(nome).alias("ad_set")
+            )
+
+            dataset_diff = pl.concat([dataset_diff, n])
+
+        # calcular quartis
+        q25 = dataset_diff["CPA_mean"].quantile(0.25)
+        q75 = dataset_diff["CPA_mean"].quantile(0.75)
+
+        # filtrar quartil inferior e superior
+        bottom_25 = dataset_diff.filter(pl.col("CPA_mean") <= q25)[
+            "ad_set"
+        ].to_list()
+        top_25 = dataset_diff.filter(pl.col("CPA_mean") >= q75)["ad_set"].to_list()
+
+        # Garante que os dados sejam strings e limpa as listas
+        top_list = [str(item) for item in top_25]
+        bottom_list = [str(item) for item in bottom_25]
+
+        # Criando os itens HTML com segurança
+        top_items_html = "".join(
+            [
+                f"<li style='padding: 8px 0; border-bottom: 1px solid #b2f5ea;'>✅ {item}</li>"
+                for item in top_list
+            ]
+        )
+        bottom_items_html = "".join(
+            [
+                f"<li style='padding: 8px 0; border-bottom: 1px solid #fed7d7;'>⚠️ {item}</li>"
+                for item in bottom_list
+            ]
+        )
+
+        ui_dashboard = mo.hstack(
+            [
+                mo.vstack(
+                    [
+                        mo.md("## 🚀 Top 25% Quartil"),
+                        mo.Html(f"""
+                <div style='background-color: #e6fffa; border-left: 5px solid #38b2ac; padding: 20px; border-radius: 8px; min-width: 300px;'>
+                    <ul style='list-style-type: none; padding: 0; margin: 0; color: #2c7a7b;'>
+                        {top_items_html if top_list else "<li>Nenhum dado encontrado</li>"}
+                    </ul>
+                </div>
+                """),
+                    ]
+                ),
+                mo.vstack(
+                    [
+                        mo.md("## 📉 Bottom 25% Quartil"),
+                        mo.Html(f"""
+                <div style='background-color: #fff5f5; border-left: 5px solid #f56565; padding: 20px; border-radius: 8px; min-width: 300px;'>
+                    <ul style='list-style-type: none; padding: 0; margin: 0; color: #c53030;'>
+                        {bottom_items_html if bottom_list else "<li>Nenhum dado encontrado</li>"}
+                    </ul>
+                </div>
+                """),
+                    ]
+                ),
+            ],
+            justify="start",
+            gap=2,
+        )
+
+        return ui_dashboard
+
+
+    gerar_ui_dashboard(df_new)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Análise De Creativos
     """)
     return
 
@@ -1009,15 +1147,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Análise De ADs
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    No caso dos ads, temos
+    Para os criativos repetimos o mesmo processo, onde encontramos
     """)
     return
 
@@ -1096,7 +1226,596 @@ def _(mo):
     - cartão virtual
     - conta digital
 
-    possuem o **CPA** $7$ reais mais baixo na média.
+    possuem o **CPA** $7$ reais mais baixo na média. E novamente não há uma grande diferença entre tipos de criativos. Olhando o top e bottom quartil, temos
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(df_new, mo, pl):
+    def gerar_ui_dashboard_ad_name(dataset: pl.DataFrame):
+        columns_names = dataset.select(pl.col("^.*ad_name_.*$")).columns
+
+        dataset_diff = pl.DataFrame()
+
+        for nome in columns_names:
+            n = (
+                dataset.filter(pl.col("Campaign_Type") == "E-commerce")
+                .group_by(nome)
+                .agg(pl.col("CPA").mean().alias("CPA_mean"))
+                .sort(nome, descending=False)
+                .with_columns(pl.col("CPA_mean").diff())
+                .filter(pl.col(nome) == 1)
+            )
+
+            n = n.rename({nome: "ad_name"}).with_columns(
+                pl.lit(nome).alias("ad_name")
+            )
+
+            dataset_diff = pl.concat([dataset_diff, n])
+
+        # calcular quartis
+        q25 = dataset_diff["CPA_mean"].quantile(0.25)
+        q75 = dataset_diff["CPA_mean"].quantile(0.75)
+
+        # filtrar quartil inferior e superior
+        bottom_25 = dataset_diff.filter(pl.col("CPA_mean") <= q25)[
+            "ad_name"
+        ].to_list()
+        top_25 = dataset_diff.filter(pl.col("CPA_mean") >= q75)[
+            "ad_name"
+        ].to_list()
+
+        # Garante que os dados sejam strings e limpa as listas
+        top_list = [str(item) for item in top_25]
+        bottom_list = [str(item) for item in bottom_25]
+
+        # Criando os itens HTML com segurança
+        top_items_html = "".join(
+            [
+                f"<li style='padding: 8px 0; border-bottom: 1px solid #b2f5ea;'>✅ {item}</li>"
+                for item in top_list
+            ]
+        )
+        bottom_items_html = "".join(
+            [
+                f"<li style='padding: 8px 0; border-bottom: 1px solid #fed7d7;'>⚠️ {item}</li>"
+                for item in bottom_list
+            ]
+        )
+
+        ui_dashboard = mo.hstack(
+            [
+                mo.vstack(
+                    [
+                        mo.md("## 🚀 Top 25% Quartil"),
+                        mo.Html(f"""
+                <div style='background-color: #e6fffa; border-left: 5px solid #38b2ac; padding: 20px; border-radius: 8px; min-width: 300px;'>
+                    <ul style='list-style-type: none; padding: 0; margin: 0; color: #2c7a7b;'>
+                        {top_items_html if top_list else "<li>Nenhum dado encontrado</li>"}
+                    </ul>
+                </div>
+                """),
+                    ]
+                ),
+                mo.vstack(
+                    [
+                        mo.md("## 📉 Bottom 25% Quartil"),
+                        mo.Html(f"""
+                <div style='background-color: #fff5f5; border-left: 5px solid #f56565; padding: 20px; border-radius: 8px; min-width: 300px;'>
+                    <ul style='list-style-type: none; padding: 0; margin: 0; color: #c53030;'>
+                        {bottom_items_html if bottom_list else "<li>Nenhum dado encontrado</li>"}
+                    </ul>
+                </div>
+                """),
+                    ]
+                ),
+            ],
+            justify="start",
+            gap=2,
+        )
+
+        return ui_dashboard
+
+
+    gerar_ui_dashboard_ad_name(df_new)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Resultados
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    As configurações no nível de ad sets e criativos não geram tanto impacto quanto as do nível de campanha; entretanto, a escolha dos atributos certos é um importante passo na otimização das próximas campanhas.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Teste De Hipóteses:
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    A nossa análise foi capaz de produzir uma série de insights de grande utilidade para o lançamento e otimização das próximas campanhas, porém é preciso testar se esses resultados são de fato válidos. Para tanto, precisamos realizar testes para validá-los. Os principais pontos que precisam ser testados são:
+
+    - Campanhas de branding estão contribuindo indiretamente para a performance das campanhas de D&R?
+    - Qual atribuição é mais precisa?
+    - Há algum efeito de interação entre os atributos do ad set e dos ads?
+
+    Para testar a primeira hipótese usamos um gráfico de regressão parcial para visualizar o efeito das campanhas de branding sobre as de D&R. Este tipo de gráfico é usado para mostrar a relação entre duas variáveis controlando outras, no nosso caso, buscamos a saber qual é a relação entre uma variável exógena, **CPA**, e uma endógena, diferença em dias entre o começo das campanhas (início branding - início D&R), controlando pelo número de campanhas ativas dentro desse intervalo. O seu funcionamento é bastante simples: para remover a influência da variável que queremos controlar, realiza-se uma regressão entre esta e a exógena e outra com a endógena; então, usam-se os resíduos dessas regressões para encontrar a relação entre variáveis. Assim, temos
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(df_new, pl):
+    df_date = df_new.group_by(["Campaign_Type", "Reporting_Start"]).agg(
+        [pl.col("CPA").mean().alias("CPA_mean"), pl.len().alias("Campaign_count")]
+    )
+
+
+    # Supondo que Reporting_Start seja do tipo Date
+    df_ecom = df_date.filter(pl.col("Campaign_Type") == "E-commerce")
+    df_brand = df_date.filter(pl.col("Campaign_Type") == "Branding")
+
+    # Faz join cruzado (cartesiano) entre E-commerce e Branding
+    df_cross = df_ecom.join(df_brand, how="cross")
+
+    df_cross
+    # Calcula diferença de dias
+    df_cross = df_cross.with_columns(
+        (pl.col("Reporting_Start") - pl.col("Reporting_Start_right"))
+        .dt.total_days()
+        .alias("days_diff")
+    )
+
+    # Agora cria os grupos
+    grupo_1 = df_cross.filter(
+        (pl.col("days_diff") >= 0) & (pl.col("days_diff") <= 3)
+    )
+    grupo_2 = df_cross.filter(
+        (pl.col("days_diff") > 3) & (pl.col("days_diff") <= 7)
+    )
+    grupo_3 = df_cross.filter(
+        (pl.col("days_diff") > 7) & (pl.col("days_diff") <= 15)
+    )
+    grupo_4 = df_cross.filter(pl.col("days_diff") > 15)
+    return (df_cross,)
+
+
+@app.cell(hide_code=True)
+def linear_regression(LinearRegression, alt, df_cross, mo, pl):
+    from typing import Tuple
+
+
+    def plot_added_variable(
+        df: pl.DataFrame,
+        y_col: str = "CPA",
+        x_col: str = "days_diff",
+        z_col: str = "Campaign_count_right",
+        title: str = None,
+    ) -> alt.Chart:
+        """
+        Cria um Added-Variable Plot (Partial Regression Plot) usando Altair.
+
+        Parâmetros:
+            df: DataFrame Polars com os dados
+            y_col: Variável dependente (ex: CPA)
+            x_col: Variável de interesse (ex: days_diff)
+            z_col: Variável de controle
+            title: Título personalizado (opcional)
+        """
+        width = 900
+        height = 350
+
+        df = df.group_by(["days_diff", "Campaign_count_right"]).agg(
+            pl.col("CPA_mean").mean().alias("CPA")
+        )
+
+        # Converter para numpy para regressões
+        y = df[y_col].to_numpy().reshape(-1, 1)
+        x = df[x_col].to_numpy().reshape(-1, 1)
+        z = df[z_col].to_numpy().reshape(-1, 1)
+
+        # ========================
+        # Modelo completo (para extrair o coeficiente)
+        # ========================
+        X_full = df[[x_col, z_col]].to_numpy()
+        model_full = LinearRegression()
+        model_full.fit(X_full, y.ravel())
+        coef = model_full.coef_[0]
+
+        # ========================
+        # Cálculo dos resíduos
+        # ========================
+        # Resíduos: y ~ z
+        model_yz = LinearRegression().fit(z, y.ravel())
+        res_y = y.ravel() - model_yz.predict(z)
+
+        # Resíduos: x ~ z
+        model_xz = LinearRegression().fit(z, x.ravel())
+        res_x = x.ravel() - model_xz.predict(z)
+
+        # Criar DataFrame com resíduos
+        df_res = pl.DataFrame({"res_x": res_x, "res_y": res_y})
+
+        # ========================
+        # Gráfico Altair
+        # ========================
+        if title is None:
+            title = f"Added-Variable Plot: Efeito de {x_col} sobre {y_col}\n(controlando por {z_col})"
+
+        # Scatter + linha de regressão
+        chart = (
+            alt.Chart(df_res)
+            .mark_circle(size=60, opacity=0.7, color="blue")
+            .encode(
+                x=alt.X(
+                    "res_x:Q",
+                    title=f"diferença de dias entre campanhas (controlando por n° de campanhas)",
+                ),
+                y=alt.Y(
+                    "res_y:Q", title=f"CPA médio (controlando por n° de campanhas)"
+                ),
+                tooltip=[
+                    alt.Tooltip("res_x:Q", format=".3f"),
+                    alt.Tooltip("res_y:Q", format=".3f"),
+                ],
+            )
+            .properties(width=width, height=height, title=title)
+        )
+
+        # Linha de regressão
+        regression_line = chart.transform_regression(
+            "res_x", "res_y", method="linear"
+        ).mark_line(color="red", strokeWidth=2.5)
+
+        # Combinar os dois
+        final_chart = (
+            (chart + regression_line)
+            .configure_title(fontSize=16, anchor="middle")
+            .configure_axis(labelFontSize=12, titleFontSize=13)
+        )
+
+        # Adicionar texto com o coeficiente
+        text = (
+            alt.Chart(pl.DataFrame({"text": [f"Coeficiente β = {coef:.4f}"]}))
+            .mark_text(
+                align="left",
+                baseline="top",
+                dx=10,
+                dy=10,
+                fontSize=14,
+                color="red",
+            )
+            .encode(text="text:N")
+        )
+
+        final_chart = final_chart + text
+
+        return mo.ui.altair_chart(final_chart)
+
+
+    # Exemplo de uso:
+    chart = plot_added_variable(
+        df=df_cross,
+        y_col="CPA",
+        x_col="days_diff",
+        z_col="Campaign_count_right",
+        title="Efeito Das Campanhas De Branding Sobre O CPA Das Campanhas De D&R",
+    )
+
+    chart
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    O gráfico, que no eixo X mostra a diferença em dias entre inicil campanha D&R - inicil campanha Branding controlado pelo n° de campanhas de branding, mostra a existência de uma pequena influência possitiva das campanhas de branding sobre a performance de D&R. Quando esta começa um pouco depois de uma campanha de branding, tende a ter o **CPA** um pouco melhor, mas podemos ignorar este efeito, já que ele é de apenas $≃0.03$.
+
+    No caso da atribuição, o problema é semelhante: como a janela de atribuição é bem maior no caso do 7 days view, one day click, uma conversão tem maior probabilidade de ser erroneamente atribuída. Para solucionar esse problema, devemos isolar o efeito de cada atribuição para saber qual é o melhor método de atribuição. Nesse caso, só olharemos para as campanhas de D&R, que serão divididas em dois grupos: Ambos utilizam o mesmo método de atribuição (one day view, seven days click). A diferença é que um deles não possui campanhas com atribuição de 1-day click dentro da sua janela, enquanto o outro possui. Se houver variação no CPA entre os grupos, isso indicará um possível erro na atribuição. Também será construído um segundo gráfico com as campanhas de D&R com o tipo de atribuição 1-day view, 7-day click, com o **CPA** agrupado pelo dia em que começaram as campanhas com o outro tipo de atribuição.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(alt, df_new, mo, pl):
+    alt.data_transformers.enable("vegafusion")
+
+
+    def gerar_boxplots(df_new: pl.DataFrame):
+        # Filtrar datasets
+        df_1_day = df_new.filter(pl.col("Attribution_Setting") == "1-day click")
+        df_7_days_clicks_1_day_view = df_new.filter(
+            pl.col("Attribution_Setting") != "1-day click"
+        )
+
+        # Criar mix
+        df_mix = df_7_days_clicks_1_day_view.join(df_1_day, how="cross")
+
+        # Calcular diff_days
+        df_inside = df_mix.with_columns(
+            (pl.col("Reporting_Start") - pl.col("Reporting_Start_right"))
+            .dt.total_days()
+            .alias("diff_days")
+        ).filter(pl.col("diff_days") <= 0)
+
+        # Criar coluna condicional "a"
+        df_inside = df_inside.with_columns(
+            pl.when(pl.col("diff_days") < -7)
+            .then(pl.lit("fora"))
+            .otherwise(pl.lit("dentro"))
+            .alias("a")
+        )
+
+        # Boxplot por categoria "a"
+        boxplot = (
+            alt.Chart(df_inside)
+            .mark_boxplot()
+            .encode(x=alt.X("a:N", title=""), y="CPA:Q")
+            .properties(title="Boxplot de CPA por categoria", width=400)
+        )
+
+        # Boxplot por diff_days entre -7 e 0
+        boxplot_days = (
+            alt.Chart(df_inside.filter(pl.col("diff_days").is_between(-7, 0)))
+            .mark_boxplot()
+            .encode(x=alt.X("diff_days:Q", title=""), y="CPA:Q")
+            .properties(
+                title="CPA por intervalo entre início das campanhas de Branding e D&R",
+                width=400,
+            )
+        )
+
+        return mo.ui.altair_chart(boxplot | boxplot_days)
+
+
+    gerar_boxplots(df_new)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Pelos gráficos acima, vemos que não existe atribuição incorreta, já que não há diferença entre o CPA médio para campanhas com atribuição 1 day view 7 days click que possuem campanhas do tipo 1 day click dentro da sua janela de atribuição. Desta forma excluímos essa hipótese. No caso da última hipótese podemos testá-la dividindo o dataset em quatro grupos:
+
+    - Ad sets que estão no top/bottom $25$% quartil em relação ao CPA.
+    - Ads que estão no top/bottom $25$% quartil em relação ao CPA.
+
+    Caso haja sinergia entre as características dos ad sets e ads pode quantificá-la pelo termo de interação da regressão linear
+
+    $$
+    \text{n° de campanhas no grupo X} = \beta_{1} \times (\text{grupo ad set}) + \beta_{2} \times (\text{grupo ad}) + \beta_{int} \times (\text{grupo ad set}) \times (\text{grupo ad}) + \alpha
+    $$
+
+    pois este será zero quando o efeito de cada grupo for meramente aditiva. Se
+
+    $$
+    \beta_{int} > 0
+    $$
+
+    há sinergia entre os grupos, se
+
+    $$
+    \beta_{int} < 0
+    $$
+
+    há conflito entre eles, e quando esse é nulo, não existe qualquer interação. Dessa forma, temos
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(df_new, mo, pl, px, smf):
+    def analisar_interacao_ad_set_ad_name_1(dataset: pl.DataFrame):
+        """
+        Analisa interação entre Ad Set e Ad (quartis) com foco em Número de Campanhas.
+        Calcula e exibe o termo de interação (β_int).
+        """
+
+        # ====================== PROCESSAMENTO DOS QUARTIS ======================
+        # === Ad_Set ===
+        columns_ad_set = dataset.select(pl.col("^.*ad_set_.*$")).columns
+        dataset_diff_set = pl.DataFrame()
+        for nome in columns_ad_set:
+            n = (
+                dataset.filter(pl.col("Campaign_Type") == "E-commerce")
+                .group_by(nome)
+                .agg(pl.col("CPA").mean().alias("CPA_mean"))
+                .sort(nome, descending=False)
+                .with_columns(pl.col("CPA_mean").diff())
+                .filter(pl.col(nome) == 1)
+            )
+            n = n.rename({nome: "ad_set"}).with_columns(
+                pl.lit(nome).alias("ad_set_name")
+            )
+            dataset_diff_set = pl.concat([dataset_diff_set, n])
+
+        q25_set = dataset_diff_set["CPA_mean"].quantile(0.25)
+        q75_set = dataset_diff_set["CPA_mean"].quantile(0.75)
+
+        top_list_ad_set = "|".join(
+            [
+                str(x).replace("ad_set_", "")
+                for x in dataset_diff_set.filter(pl.col("CPA_mean") >= q75_set)[
+                    "ad_set_name"
+                ].to_list()
+            ]
+        )
+        bottom_list_ad_set = "|".join(
+            [
+                str(x).replace("ad_set_", "")
+                for x in dataset_diff_set.filter(pl.col("CPA_mean") <= q25_set)[
+                    "ad_set_name"
+                ].to_list()
+            ]
+        )
+
+        # === Ad_Name ===
+        columns_ad_name = dataset.select(pl.col("^.*ad_name_.*$")).columns
+        dataset_diff_ad = pl.DataFrame()
+        for nome in columns_ad_name:
+            n = (
+                dataset.filter(pl.col("Campaign_Type") == "E-commerce")
+                .group_by(nome)
+                .agg(pl.col("CPA").mean().alias("CPA_mean"))
+                .sort(nome, descending=False)
+                .with_columns(pl.col("CPA_mean").diff())
+                .filter(pl.col(nome) == 1)
+            )
+            n = n.rename({nome: "ad"}).with_columns(pl.lit(nome).alias("ad_name"))
+            dataset_diff_ad = pl.concat([dataset_diff_ad, n])
+
+        q25_ad = dataset_diff_ad["CPA_mean"].quantile(0.25)
+        q75_ad = dataset_diff_ad["CPA_mean"].quantile(0.75)
+
+        top_list_ad = "|".join(
+            [
+                str(x).replace("ad_name_", "")
+                for x in dataset_diff_ad.filter(pl.col("CPA_mean") >= q75_ad)[
+                    "ad_name"
+                ].to_list()
+            ]
+        )
+        bottom_list_ad = "|".join(
+            [
+                str(x).replace("ad_name_", "")
+                for x in dataset_diff_ad.filter(pl.col("CPA_mean") <= q25_ad)[
+                    "ad_name"
+                ].to_list()
+            ]
+        )
+
+        # ====================== CRIAÇÃO DAS VARIÁVEIS ======================
+        df = dataset.with_columns(
+            [
+                pl.when(pl.col("Ad_Set_Name").str.contains(bottom_list_ad_set))
+                .then(pl.lit("Top 25% Ad Set"))
+                .when(pl.col("Ad_Set_Name").str.contains(top_list_ad_set))
+                .then(pl.lit("Bottom 25% Ad Set"))
+                .otherwise(pl.lit("Outros"))
+                .alias("ad_set_quartil"),
+                pl.when(pl.col("Ad_Name").str.contains(bottom_list_ad))
+                .then(pl.lit("Top 25% Ad"))
+                .when(pl.col("Ad_Name").str.contains(top_list_ad))
+                .then(pl.lit("Bottom 25% Ad"))
+                .otherwise(pl.lit("Outros"))
+                .alias("ad_quartil"),
+            ]
+        )
+
+        # Filtra apenas as combinações relevantes
+        df_interacao = df.filter(
+            (pl.col("ad_set_quartil") != "Outros")
+            & (pl.col("ad_quartil") != "Outros")
+        )
+
+        # ====================== TABELA DE CONTAGEM ======================
+        tabela = (
+            df_interacao.group_by(["ad_set_quartil", "ad_quartil"])
+            .agg(pl.len().alias("n_campanhas"))
+            .sort(["ad_set_quartil", "ad_quartil"])
+        )
+
+        # ====================== REGRESSÃO LINEAR COM INTERAÇÃO ======================
+        # Cria dummies para regressão
+        df_reg = df_interacao.with_columns(
+            [
+                (pl.col("ad_set_quartil") == "Top 25% Ad Set")
+                .cast(pl.Int8)
+                .alias("ad_set_top"),
+                (pl.col("ad_quartil") == "Top 25% Ad")
+                .cast(pl.Int8)
+                .alias("ad_top"),
+            ]
+        )
+
+        # Converte para pandas (statsmodels)
+        df_pd = df_reg.select(["ad_set_top", "ad_top"]).to_pandas()
+        df_pd["n_campanhas"] = 1  # Cada linha é uma campanha
+
+        # Modelo de regressão
+        model = smf.ols(
+            "n_campanhas ~ ad_set_top + ad_top + ad_set_top:ad_top", data=df_pd
+        ).fit()
+
+        beta_int = model.params["ad_set_top:ad_top"]
+        p_value = model.pvalues["ad_set_top:ad_top"]
+
+        # ====================== GRÁFICO ======================
+        fig = px.line(
+            tabela,
+            x="ad_set_quartil",
+            y="n_campanhas",
+            color="ad_quartil",
+            markers=True,
+            title="Interação entre Ad Set e Ad<br><sup>Número de Campanhas por Combinação</sup>",
+            labels={
+                "n_campanhas": "Número de Campanhas",
+                "ad_set_quartil": "Qualidade do Ad Set",
+            },
+            color_discrete_sequence=["#1f77b4", "#ff7f0e"],
+        )
+
+        # Adiciona anotação com o β_int
+        annotation_text = (
+            f"<b>β_int = {beta_int:.3f}</b><br>p-value = {p_value:.3f}"
+        )
+        if p_value < 0.05:
+            annotation_text += " <b>*</b>"
+
+        fig.add_annotation(
+            x=0.5,
+            y=0.95,
+            xref="paper",
+            yref="paper",
+            text=annotation_text,
+            showarrow=False,
+            font=dict(size=14, color="black"),
+            bgcolor="rgba(255,255,255,0.8)",
+            bordercolor="black",
+            borderwidth=1,
+            borderpad=4,
+            align="center",
+        )
+
+        fig.update_layout(
+            height=580,
+            template="plotly_dark",
+            legend_title="Qualidade do Ad",
+            yaxis_title="Número de Campanhas",
+        )
+
+        # fig.show()
+
+        return mo.ui.plotly(fig)
+
+
+    # Uso:
+    # resultado, modelo = analisar_interacao_ad_set_ad_name(df_new)
+
+    analisar_interacao_ad_set_ad_name_1(df_new)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    O gráfico evidencia o comportamento de cada grupo, acompanhado do valor do termo de interação, que é igual a zero. Esse resultado indica que os atributos no nível dos ad sets e dos próprios ads contribuem de forma independente para o desempenho da campanha.
     """)
     return
 
@@ -1112,38 +1831,73 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    As comfinfurações a nível de ad sets e ads não geram tanto impacto quanto as no nívem de campanha, entrentanto ainda podemos usar as informações obititas para otimizar futuras campanhas.
+    Todas as hipóteses se mostraram inválidas
+
+    ❌ Campanhas de branding estão contribuindo indiretamente para a performance das campanhas de D&R
+
+    ❌ Há erro nas atribuições de conversões no modelo 1-day view, 7-day click
+
+    ❌ Existe efeito de interação entre os tributos do ad set e ad
+
+    Resultado que valida os insights obtidos ao longo do trabalho.
     """)
-    return
-
-
-@app.cell
-def _(df_new, pl):
-    a = df_new.group_by(pl.col("^.*ad_set_.*|Campaign_Type$")).agg(
-        pl.col("CTR").mean().alias("s")
-    )
-
-    a
-    return
-
-
-@app.cell
-def _():
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Save cleaned df with metrics for further use if needed
+    ---
     """)
     return
 
 
-@app.cell
-def _():
-    # df.to_csv("data\\processed_nubank_ads.csv", index=False)
-    # print("\nProcessed data saved to processed_nubank_ads.csv")
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Resultado Final:
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    #### 🎯 Objetivo Principal
+    O trabalho teve como objetivo realizar uma análise sobre as campanhas de marketing do Nubank na Meta, buscando compreender padrões, relações e possíveis fatores relevantes para o problema de negócio. A meta era transformar dados brutos em informações úteis, capazes de apoiar decisões estratégicas e comprovar hipóteses para etapas posteriores de modelagem ou tomada de decisão.
+
+    ---
+
+    #### 🛠️ Principais Métodos Utilizados
+
+    - **Limpeza e tratamento de dados**: remoção de valores nulos, duplicados e inconsistências.
+    - **Análise estatística descritiva**: cálculo de médias, medianas, distribuições e correlações.
+    - **Visualizações gráficas**: histogramas, boxplots, scatterplots e heatmaps para identificar padrões e outliers.
+    - **Segmentação e agrupamento exploratório**: análise por categorias e variáveis-chave para entender diferenças entre grupos.
+    - **Testes de hipóteses iniciais**: verificação de relações estatisticamente significativas entre variáveis.
+
+    ---
+
+    #### 📈 Principais Resultados e Insights
+
+    - **Campanhas De E-commerce(D&R)**: Têm performance superior em todas as métricas, principalmente nas de maior impacto para os objetivos da empresa.
+    - **O modelo de atribuição**: não interfere nos resultados das campanhas.
+    - **Os atributos do ad set e dos ads**: Não impactam de forma significativa o **CPA** da campanha.
+
+    ---
+
+    #### ⚡ Impactos Quantificados
+
+    - **Tipo de campanha**: Utilizar apenas campanhas de D&R reduz o **CPA** em aproximadamente $200$ reais.
+
+    - **Trend**: O dia da semana não influencia a performance das campanhas.
+
+    - **Ad set**: Escolher os atributos corretos reduz o **CPA** em aproximadamente $3$ reais.
+
+    - **set**: Escolher os atributos corretos reduz o **CPA** em aproximadamente $8$ reais.
+
+    ---
+    """)
     return
 
 
