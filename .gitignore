@@ -4,8 +4,7 @@ __pycache__/
 
 # my
 
-data/processed_nubank_ads.csv
-data/Nubank_ads_data.csv
+data
 pyproject.toml
 prompts.txt
 todo
