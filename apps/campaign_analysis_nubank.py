@@ -101,6 +101,7 @@ def _():
     import polars as pl
     import numpy as np
     import pyarrow
+    import vl_convert
 
     # Bibliotecas de modelagem estatística e machine learning
     import statsmodels.formula.api as smf
@@ -540,9 +541,7 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""que campanhas do tipo E-commerce producem mais clicks. Já no caso do CPC, CVR, CPA e CPM, temos"""
-    )
+    mo.md(r"""que campanhas do tipo E-commerce producem mais clicks. Já no caso do CPC, CVR, CPA e CPM, temos""")
     return
 
 
@@ -608,9 +607,7 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""Novamente as campanhas do tipo E-commerce se mostraram superiores, em especial na comparação do **CPA**, onde há uma clara diferença entre as duas. Estudando a relação entre o **CPA** e frequência, temos"""
-    )
+    mo.md(r"""Novamente as campanhas do tipo E-commerce se mostraram superiores, em especial na comparação do **CPA**, onde há uma clara diferença entre as duas. Estudando a relação entre o **CPA** e frequência, temos""")
     return
 
 
@@ -718,9 +715,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""A análise inicial já indica que as campanhas de D&R apresentam desempenho superior em relação às de branding. No entanto, ainda é necessário aprofundar o estudo nas métricas de volume e nos modelos de atribuição para tomar uma decisão definitiva. Ao avaliar os resultados pelas métricas de volume e pelos diferentes modelos de atribuição, observamos"""
-    )
+    mo.md(r"""A análise inicial já indica que as campanhas de D&R apresentam desempenho superior em relação às de branding. No entanto, ainda é necessário aprofundar o estudo nas métricas de volume e nos modelos de atribuição para tomar uma decisão definitiva. Ao avaliar os resultados pelas métricas de volume e pelos diferentes modelos de atribuição, observamos""")
     return
 
 
@@ -925,9 +920,7 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""Que os resultados permanecem identicos, com novamente as campanhas de D&R tendo melhor perfomace em todos os paramêntros"""
-    )
+    mo.md(r"""Que os resultados permanecem identicos, com novamente as campanhas de D&R tendo melhor perfomace em todos os paramêntros""")
     return
 
 
@@ -939,9 +932,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""A primeira parte da análise exploratória já trouxe um resultado claro: a superioridade das campanhas D&R sobre Branding em todas as métricas. Desta forma, o primeiro insight é fazer uso apenas de campanhas D&R para maximizar o volume de contas abertas com o menor custo. Com a exploração no nível de campanha encerrada, seguimos para o nível dos ads set e ads."""
-    )
+    mo.md(r"""A primeira parte da análise exploratória já trouxe um resultado claro: a superioridade das campanhas D&R sobre Branding em todas as métricas. Desta forma, o primeiro insight é fazer uso apenas de campanhas D&R para maximizar o volume de contas abertas com o menor custo. Com a exploração no nível de campanha encerrada, seguimos para o nível dos ads set e ads.""")
     return
 
 
@@ -953,9 +944,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""Na análise dos ad sets buscamos encontrar quais características reduzem/aumenta o CPA da campanha. Pelos gráficos abaixo, vemos"""
-    )
+    mo.md(r"""Na análise dos ad sets buscamos encontrar quais características reduzem/aumenta o CPA da campanha. Pelos gráficos abaixo, vemos""")
     return
 
 
@@ -1319,9 +1308,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""As configurações no nível de ad sets e criativos não geram tanto impacto quanto as do nível de campanha; entretanto, a escolha dos atributos certos é um importante passo na otimização das próximas campanhas."""
-    )
+    mo.md(r"""As configurações no nível de ad sets e criativos não geram tanto impacto quanto as do nível de campanha; entretanto, a escolha dos atributos certos é um importante passo na otimização das próximas campanhas.""")
     return
 
 
@@ -1811,9 +1798,7 @@ def _(alt, df_new, mo, pl, smf):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""O gráfico evidencia o comportamento de cada grupo, acompanhado do valor do termo de interação, que é igual a zero. Esse resultado indica que os atributos no nível dos ad sets e dos próprios ads contribuem de forma independente para o desempenho da campanha."""
-    )
+    mo.md(r"""O gráfico evidencia o comportamento de cada grupo, acompanhado do valor do termo de interação, que é igual a zero. Esse resultado indica que os atributos no nível dos ad sets e dos próprios ads contribuem de forma independente para o desempenho da campanha.""")
     return
 
 

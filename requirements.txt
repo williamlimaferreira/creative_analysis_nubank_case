@@ -6,3 +6,4 @@ marimo
 polars
 plotly
 vegafusion
+vl-convert-python

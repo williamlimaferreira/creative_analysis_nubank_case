@@ -4,6 +4,8 @@
 
 Análise Exploratória de Dados das campanhas de Marketing do Nubank na Meta (Facebook/Instagram Ads).
 
+Abrir no [![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/github/williamlimaferreira/creative_analysis_nubank_case/blob/main/apps/campaign_analysis_nubank.py/server)
+
 ------------------------------------------------------------------------
 
 ## **Descrição do Problema**
@@ -60,7 +62,7 @@ O objetivo desta análise foi investigar os principais fatores que influenciam o
 ### **Principais Conclusões**
 
 | Fator | Impacto no CPA | Recomendação |
-|---------------------------|----------------------------|------------------|
+|---------------------------|---------------------------|------------------|
 | Tipo de Campanha (D&R) | **Muito Alto** (-R\$ 200) | Priorizar orçamento em D&R |
 | Atributos do Ad Set | Baixo (\~ -R\$ 3) | Otimizar, mas não é prioridade |
 | Atributos do Ad | Moderado (\~ -R\$ 8) | Foco em criativos de alta performance |
