@@ -7,3 +7,4 @@ polars
 plotly
 vegafusion
 vl-convert-python
+vl_convert 
