@@ -108,14 +108,10 @@ def _():
 
     # Visualização de dados
     import altair as alt
-    # import plotly
-    # import plotly.express as px
-    # import plotly.graph_objects as go
-    # from plotly.subplots import make_subplots
 
     # Ferramentas adicionais
     import marimo as mo
-    return LinearRegression, alt, mo, pd, pl
+    return LinearRegression, alt, mo, pl, smf
 
 
 @app.cell(hide_code=True)
@@ -125,12 +121,10 @@ def _(mo):
 
 
 @app.cell
-def _(mo, pd, pl):
-    file_path = mo.notebook_location() / "public" / "Nubank_ads_data.parquet"
+def _(pl):
+    file_path = "https://raw.githubusercontent.com/williamlimaferreira/creative_analysis_nubank_case/main/apps/public/Nubank_ads_data.parquet"
 
-    df = pd.read_parquet(file_path)
-
-    df = pl.from_pandas(df)
+    df = pl.read_parquet(file_path)
     return (df,)
 
 
@@ -546,7 +540,9 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""que campanhas do tipo E-commerce producem mais clicks. Já no caso do CPC, CVR, CPA e CPM, temos""")
+    mo.md(
+        r"""que campanhas do tipo E-commerce producem mais clicks. Já no caso do CPC, CVR, CPA e CPM, temos"""
+    )
     return
 
 
@@ -612,7 +608,9 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""Novamente as campanhas do tipo E-commerce se mostraram superiores, em especial na comparação do **CPA**, onde há uma clara diferença entre as duas. Estudando a relação entre o **CPA** e frequência, temos""")
+    mo.md(
+        r"""Novamente as campanhas do tipo E-commerce se mostraram superiores, em especial na comparação do **CPA**, onde há uma clara diferença entre as duas. Estudando a relação entre o **CPA** e frequência, temos"""
+    )
     return
 
 
@@ -720,7 +718,9 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""A análise inicial já indica que as campanhas de D&R apresentam desempenho superior em relação às de branding. No entanto, ainda é necessário aprofundar o estudo nas métricas de volume e nos modelos de atribuição para tomar uma decisão definitiva. Ao avaliar os resultados pelas métricas de volume e pelos diferentes modelos de atribuição, observamos""")
+    mo.md(
+        r"""A análise inicial já indica que as campanhas de D&R apresentam desempenho superior em relação às de branding. No entanto, ainda é necessário aprofundar o estudo nas métricas de volume e nos modelos de atribuição para tomar uma decisão definitiva. Ao avaliar os resultados pelas métricas de volume e pelos diferentes modelos de atribuição, observamos"""
+    )
     return
 
 
@@ -925,7 +925,9 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""Que os resultados permanecem identicos, com novamente as campanhas de D&R tendo melhor perfomace em todos os paramêntros""")
+    mo.md(
+        r"""Que os resultados permanecem identicos, com novamente as campanhas de D&R tendo melhor perfomace em todos os paramêntros"""
+    )
     return
 
 
@@ -937,7 +939,9 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""A primeira parte da análise exploratória já trouxe um resultado claro: a superioridade das campanhas D&R sobre Branding em todas as métricas. Desta forma, o primeiro insight é fazer uso apenas de campanhas D&R para maximizar o volume de contas abertas com o menor custo. Com a exploração no nível de campanha encerrada, seguimos para o nível dos ads set e ads.""")
+    mo.md(
+        r"""A primeira parte da análise exploratória já trouxe um resultado claro: a superioridade das campanhas D&R sobre Branding em todas as métricas. Desta forma, o primeiro insight é fazer uso apenas de campanhas D&R para maximizar o volume de contas abertas com o menor custo. Com a exploração no nível de campanha encerrada, seguimos para o nível dos ads set e ads."""
+    )
     return
 
 
@@ -949,7 +953,9 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""Na análise dos ad sets buscamos encontrar quais características reduzem/aumenta o CPA da campanha. Pelos gráficos abaixo, vemos""")
+    mo.md(
+        r"""Na análise dos ad sets buscamos encontrar quais características reduzem/aumenta o CPA da campanha. Pelos gráficos abaixo, vemos"""
+    )
     return
 
 
@@ -1313,7 +1319,9 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""As configurações no nível de ad sets e criativos não geram tanto impacto quanto as do nível de campanha; entretanto, a escolha dos atributos certos é um importante passo na otimização das próximas campanhas.""")
+    mo.md(
+        r"""As configurações no nível de ad sets e criativos não geram tanto impacto quanto as do nível de campanha; entretanto, a escolha dos atributos certos é um importante passo na otimização das próximas campanhas."""
+    )
     return
 
 
@@ -1603,195 +1611,209 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _():
-    # def analisar_interacao_ad_set_ad_name_1(dataset: pl.DataFrame):
-    #     """
-    #     Analisa interação entre Ad Set e Ad (quartis) com foco em Número de Campanhas.
-    #     Calcula e exibe o termo de interação (β_int).
-    #     """
+def _(alt, df_new, mo, pl, smf):
+    def analisar_interacao_ad_set_ad_name_1(dataset: pl.DataFrame):
+        """
+        Analisa interação entre Ad Set e Ad (quartis) com foco em Número de Campanhas.
+        Calcula e exibe o termo de interação (β_int).
+        """
 
-    #     # ====================== PROCESSAMENTO DOS QUARTIS ======================
-    #     # === Ad_Set ===
-    #     columns_ad_set = dataset.select(pl.col("^.*ad_set_.*$")).columns
-    #     dataset_diff_set = pl.DataFrame()
-    #     for nome in columns_ad_set:
-    #         n = (
-    #             dataset.filter(pl.col("Campaign_Type") == "E-commerce")
-    #             .group_by(nome)
-    #             .agg(pl.col("CPA").mean().alias("CPA_mean"))
-    #             .sort(nome, descending=False)
-    #             .with_columns(pl.col("CPA_mean").diff())
-    #             .filter(pl.col(nome) == 1)
-    #         )
-    #         n = n.rename({nome: "ad_set"}).with_columns(
-    #             pl.lit(nome).alias("ad_set_name")
-    #         )
-    #         dataset_diff_set = pl.concat([dataset_diff_set, n])
+        # ====================== PROCESSAMENTO DOS QUARTIS ======================
+        # === Ad_Set ===
+        columns_ad_set = dataset.select(pl.col("^.*ad_set_.*$")).columns
+        dataset_diff_set = pl.DataFrame()
+        for nome in columns_ad_set:
+            n = (
+                dataset.filter(pl.col("Campaign_Type") == "E-commerce")
+                .group_by(nome)
+                .agg(pl.col("CPA").mean().alias("CPA_mean"))
+                .sort(nome, descending=False)
+                .with_columns(pl.col("CPA_mean").diff())
+                .filter(pl.col(nome) == 1)
+            )
+            n = n.rename({nome: "ad_set"}).with_columns(
+                pl.lit(nome).alias("ad_set_name")
+            )
+            dataset_diff_set = pl.concat([dataset_diff_set, n])
 
-    #     q25_set = dataset_diff_set["CPA_mean"].quantile(0.25)
-    #     q75_set = dataset_diff_set["CPA_mean"].quantile(0.75)
+        q25_set = dataset_diff_set["CPA_mean"].quantile(0.25)
+        q75_set = dataset_diff_set["CPA_mean"].quantile(0.75)
 
-    #     top_list_ad_set = "|".join(
-    #         [
-    #             str(x).replace("ad_set_", "")
-    #             for x in dataset_diff_set.filter(pl.col("CPA_mean") >= q75_set)[
-    #                 "ad_set_name"
-    #             ].to_list()
-    #         ]
-    #     )
-    #     bottom_list_ad_set = "|".join(
-    #         [
-    #             str(x).replace("ad_set_", "")
-    #             for x in dataset_diff_set.filter(pl.col("CPA_mean") <= q25_set)[
-    #                 "ad_set_name"
-    #             ].to_list()
-    #         ]
-    #     )
+        top_list_ad_set = "|".join(
+            [
+                str(x).replace("ad_set_", "")
+                for x in dataset_diff_set.filter(pl.col("CPA_mean") >= q75_set)[
+                    "ad_set_name"
+                ].to_list()
+            ]
+        )
+        bottom_list_ad_set = "|".join(
+            [
+                str(x).replace("ad_set_", "")
+                for x in dataset_diff_set.filter(pl.col("CPA_mean") <= q25_set)[
+                    "ad_set_name"
+                ].to_list()
+            ]
+        )
 
-    #     # === Ad_Name ===
-    #     columns_ad_name = dataset.select(pl.col("^.*ad_name_.*$")).columns
-    #     dataset_diff_ad = pl.DataFrame()
-    #     for nome in columns_ad_name:
-    #         n = (
-    #             dataset.filter(pl.col("Campaign_Type") == "E-commerce")
-    #             .group_by(nome)
-    #             .agg(pl.col("CPA").mean().alias("CPA_mean"))
-    #             .sort(nome, descending=False)
-    #             .with_columns(pl.col("CPA_mean").diff())
-    #             .filter(pl.col(nome) == 1)
-    #         )
-    #         n = n.rename({nome: "ad"}).with_columns(pl.lit(nome).alias("ad_name"))
-    #         dataset_diff_ad = pl.concat([dataset_diff_ad, n])
+        # === Ad_Name ===
+        columns_ad_name = dataset.select(pl.col("^.*ad_name_.*$")).columns
+        dataset_diff_ad = pl.DataFrame()
+        for nome in columns_ad_name:
+            n = (
+                dataset.filter(pl.col("Campaign_Type") == "E-commerce")
+                .group_by(nome)
+                .agg(pl.col("CPA").mean().alias("CPA_mean"))
+                .sort(nome, descending=False)
+                .with_columns(pl.col("CPA_mean").diff())
+                .filter(pl.col(nome) == 1)
+            )
+            n = n.rename({nome: "ad"}).with_columns(pl.lit(nome).alias("ad_name"))
+            dataset_diff_ad = pl.concat([dataset_diff_ad, n])
 
-    #     q25_ad = dataset_diff_ad["CPA_mean"].quantile(0.25)
-    #     q75_ad = dataset_diff_ad["CPA_mean"].quantile(0.75)
+        q25_ad = dataset_diff_ad["CPA_mean"].quantile(0.25)
+        q75_ad = dataset_diff_ad["CPA_mean"].quantile(0.75)
 
-    #     top_list_ad = "|".join(
-    #         [
-    #             str(x).replace("ad_name_", "")
-    #             for x in dataset_diff_ad.filter(pl.col("CPA_mean") >= q75_ad)[
-    #                 "ad_name"
-    #             ].to_list()
-    #         ]
-    #     )
-    #     bottom_list_ad = "|".join(
-    #         [
-    #             str(x).replace("ad_name_", "")
-    #             for x in dataset_diff_ad.filter(pl.col("CPA_mean") <= q25_ad)[
-    #                 "ad_name"
-    #             ].to_list()
-    #         ]
-    #     )
+        top_list_ad = "|".join(
+            [
+                str(x).replace("ad_name_", "")
+                for x in dataset_diff_ad.filter(pl.col("CPA_mean") >= q75_ad)[
+                    "ad_name"
+                ].to_list()
+            ]
+        )
+        bottom_list_ad = "|".join(
+            [
+                str(x).replace("ad_name_", "")
+                for x in dataset_diff_ad.filter(pl.col("CPA_mean") <= q25_ad)[
+                    "ad_name"
+                ].to_list()
+            ]
+        )
 
-    #     # ====================== CRIAÇÃO DAS VARIÁVEIS ======================
-    #     df = dataset.with_columns(
-    #         [
-    #             pl.when(pl.col("Ad_Set_Name").str.contains(bottom_list_ad_set))
-    #             .then(pl.lit("Top 25% Ad Set"))
-    #             .when(pl.col("Ad_Set_Name").str.contains(top_list_ad_set))
-    #             .then(pl.lit("Bottom 25% Ad Set"))
-    #             .otherwise(pl.lit("Outros"))
-    #             .alias("ad_set_quartil"),
-    #             pl.when(pl.col("Ad_Name").str.contains(bottom_list_ad))
-    #             .then(pl.lit("Top 25% Ad"))
-    #             .when(pl.col("Ad_Name").str.contains(top_list_ad))
-    #             .then(pl.lit("Bottom 25% Ad"))
-    #             .otherwise(pl.lit("Outros"))
-    #             .alias("ad_quartil"),
-    #         ]
-    #     )
+        # ====================== CRIAÇÃO DAS VARIÁVEIS ======================
+        df = dataset.with_columns(
+            [
+                pl.when(pl.col("Ad_Set_Name").str.contains(bottom_list_ad_set))
+                .then(pl.lit("Top 25% Ad Set"))
+                .when(pl.col("Ad_Set_Name").str.contains(top_list_ad_set))
+                .then(pl.lit("Bottom 25% Ad Set"))
+                .otherwise(pl.lit("Outros"))
+                .alias("ad_set_quartil"),
+                pl.when(pl.col("Ad_Name").str.contains(bottom_list_ad))
+                .then(pl.lit("Top 25% Ad"))
+                .when(pl.col("Ad_Name").str.contains(top_list_ad))
+                .then(pl.lit("Bottom 25% Ad"))
+                .otherwise(pl.lit("Outros"))
+                .alias("ad_quartil"),
+            ]
+        )
 
-    #     # Filtra apenas as combinações relevantes
-    #     df_interacao = df.filter(
-    #         (pl.col("ad_set_quartil") != "Outros")
-    #         & (pl.col("ad_quartil") != "Outros")
-    #     )
+        # Filtra apenas as combinações relevantes
+        df_interacao = df.filter(
+            (pl.col("ad_set_quartil") != "Outros")
+            & (pl.col("ad_quartil") != "Outros")
+        )
 
-    #     # ====================== TABELA DE CONTAGEM ======================
-    #     tabela = (
-    #         df_interacao.group_by(["ad_set_quartil", "ad_quartil"])
-    #         .agg(pl.len().alias("n_campanhas"))
-    #         .sort(["ad_set_quartil", "ad_quartil"])
-    #     )
+        # ====================== TABELA DE CONTAGEM ======================
+        tabela = (
+            df_interacao.group_by(["ad_set_quartil", "ad_quartil"])
+            .agg(pl.len().alias("n_campanhas"))
+            .sort(["ad_set_quartil", "ad_quartil"])
+        )
 
-    #     # ====================== REGRESSÃO LINEAR COM INTERAÇÃO ======================
-    #     # Cria dummies para regressão
-    #     df_reg = df_interacao.with_columns(
-    #         [
-    #             (pl.col("ad_set_quartil") == "Top 25% Ad Set")
-    #             .cast(pl.Int8)
-    #             .alias("ad_set_top"),
-    #             (pl.col("ad_quartil") == "Top 25% Ad")
-    #             .cast(pl.Int8)
-    #             .alias("ad_top"),
-    #         ]
-    #     )
+        # ====================== REGRESSÃO LINEAR COM INTERAÇÃO ======================
+        # Cria dummies para regressão
+        df_reg = df_interacao.with_columns(
+            [
+                (pl.col("ad_set_quartil") == "Top 25% Ad Set")
+                .cast(pl.Int8)
+                .alias("ad_set_top"),
+                (pl.col("ad_quartil") == "Top 25% Ad")
+                .cast(pl.Int8)
+                .alias("ad_top"),
+            ]
+        )
 
-    #     # Converte para pandas (statsmodels)
-    #     df_pd = df_reg.select(["ad_set_top", "ad_top"]).to_pandas()
-    #     df_pd["n_campanhas"] = 1  # Cada linha é uma campanha
+        # Converte para pandas (statsmodels)
+        df_pd = df_reg.select(["ad_set_top", "ad_top"]).to_pandas()
+        df_pd["n_campanhas"] = 1  # Cada linha é uma campanha
 
-    #     # Modelo de regressão
-    #     model = smf.ols(
-    #         "n_campanhas ~ ad_set_top + ad_top + ad_set_top:ad_top", data=df_pd
-    #     ).fit()
+        # Modelo de regressão
+        model = smf.ols(
+            "n_campanhas ~ ad_set_top + ad_top + ad_set_top:ad_top", data=df_pd
+        ).fit()
 
-    #     beta_int = model.params["ad_set_top:ad_top"]
-    #     p_value = model.pvalues["ad_set_top:ad_top"]
+        beta_int = model.params["ad_set_top:ad_top"]
+        p_value = model.pvalues["ad_set_top:ad_top"]
 
-    #     # ====================== GRÁFICO ======================
-    #     annotation_text = f"β_int = {beta_int:.3f}\np-value = {p_value:.3f}"
-    #     if p_value < 0.05:
-    #         annotation_text += " *"
+        # ====================== GRÁFICO ======================
+        annotation_text = f"β_int = {beta_int:.3f}\np-value = {p_value:.3f}"
+        if p_value < 0.05:
+            annotation_text += " *"
 
-    #     # Criar a base do gráfico
-    #     chart = alt.Chart(tabela.to_pandas()).encode(
-    #         x=alt.X("ad_set_quartil", title="Qualidade do Ad Set"),
-    #         y=alt.Y("n_campanhas", title="Número de Campanhas"),
-    #         color=alt.Color("ad_quartil", title="Qualidade do Ad", scale=alt.Scale(range=["#1f77b4", "#ff7f0e"])),
-    #     ).properties(
-    #         title=alt.TitleParams(
-    #             text="Interação entre Ad Set e Ad",
-    #             subtitle="Número de Campanhas por Combinação"
-    #         ),
-    #         width=850,
-    #         height=400
-    #     )
+        # Criar a base do gráfico
+        chart = (
+            alt.Chart(tabela.to_pandas())
+            .encode(
+                x=alt.X("ad_set_quartil", title="Qualidade do Ad Set"),
+                y=alt.Y("n_campanhas", title="Número de Campanhas"),
+                color=alt.Color(
+                    "ad_quartil",
+                    title="Qualidade do Ad",
+                    scale=alt.Scale(range=["#1f77b4", "#ff7f0e"]),
+                ),
+            )
+            .properties(
+                title=alt.TitleParams(
+                    text="Interação entre Ad Set e Ad",
+                    subtitle="Número de Campanhas por Combinação",
+                ),
+                width=850,
+                height=400,
+            )
+        )
 
-    #     # Adicionar linhas e pontos
-    #     lines = chart.mark_line(point=True)
+        # Adicionar linhas e pontos
+        lines = chart.mark_line(point=True)
 
-    #     # Criar anotação (texto flutuante)
-    #     annotation = alt.Chart(tabela.to_pandas()).mark_text(
-    #         align='center',
-    #         baseline='top',
-    #         color='black',
-    #         fontSize=14,
-    #         fontWeight='bold'
-    #     ).encode(
-    #         x=alt.value(500),  # Centro do gráfico
-    #         y=alt.value(20),   # Posição superior
-    #         text=alt.value(annotation_text)
-    #     )
+        # Criar anotação (texto flutuante)
+        annotation = (
+            alt.Chart(tabela.to_pandas())
+            .mark_text(
+                align="center",
+                baseline="top",
+                color="black",
+                fontSize=14,
+                fontWeight="bold",
+            )
+            .encode(
+                x=alt.value(500),  # Centro do gráfico
+                y=alt.value(20),  # Posição superior
+                text=alt.value(annotation_text),
+            )
+        )
 
-    #     # Combinar camadas
-    #     # fig = (lines + annotation).configure_view(
-    #     #     stroke=None
-    #     # ).configure_axis(
-    #     #     grid=True
-    #     # )
-    #     fig = (lines + annotation)
+        # Combinar camadas
+        # fig = (lines + annotation).configure_view(
+        #     stroke=None
+        # ).configure_axis(
+        #     grid=True
+        # )
+        fig = lines + annotation
 
-    #     return mo.ui.altair_chart(fig)
+        return mo.ui.altair_chart(fig)
 
 
-    # analisar_interacao_ad_set_ad_name_1(df_new)
+    analisar_interacao_ad_set_ad_name_1(df_new)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""O gráfico evidencia o comportamento de cada grupo, acompanhado do valor do termo de interação, que é igual a zero. Esse resultado indica que os atributos no nível dos ad sets e dos próprios ads contribuem de forma independente para o desempenho da campanha.""")
+    mo.md(
+        r"""O gráfico evidencia o comportamento de cada grupo, acompanhado do valor do termo de interação, que é igual a zero. Esse resultado indica que os atributos no nível dos ad sets e dos próprios ads contribuem de forma independente para o desempenho da campanha."""
+    )
     return
 
 
