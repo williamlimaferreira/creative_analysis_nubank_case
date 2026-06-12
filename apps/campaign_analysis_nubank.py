@@ -7,7 +7,9 @@
 #   "scikit-learn",
 #   "marimo",
 #   "polars",
-#   "vegafusion" 
+#   "vegafusion", 
+#   "vl_con",
+#   "vl-convert-python"
 # ]
 # ///
 
