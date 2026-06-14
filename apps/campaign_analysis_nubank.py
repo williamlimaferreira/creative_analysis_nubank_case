@@ -7,63 +7,69 @@
 #   "scikit-learn",
 #   "marimo",
 #   "polars",
+#    "vl-convert-python",
+#    "statsmodels",
+#    "pyarrow",
+#    "altair",
+#    "vegafusion"
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.14.17"
+__generated_with = "0.18.4"
 app = marimo.App(width="full")
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Contexto do Case""")
+    mo.md(r"""
+    # Contexto do Case
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     Você foi contratado como **Digital Marketing Analyst** do Nubank para analisar campanhas rodadas no Meta Ads durante o Q1. 1.
 
     O Nubank deseja acelerar a **abertura de contas digitais** utilizando Meta Ads (Facebook, Instagram e Audience Network). A operação já está rodando há alguns meses, com campanhas ativas em diferentes objetivos.
 
     O time interno percebeu crescimento em volume, mas não tem clareza sobre a eficiência real do investimento, nem sobre o impacto incremental das campanhas.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Objetivos Do Trabalho""")
+    mo.md(r"""
+    # Objetivos Do Trabalho
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     Temos como objetivo principal do trabalho encontrar quais características das campanhas e ads apresentam o melhor desempenho. Essa não é uma tarefa fácil, pois precisamos não só realizar uma boa análise dos dados históricos, mas também compreender os objetivos estratégicos da empresa para otimizar as métricas adequadas. O conjunto é uma simulação que traz informações sobre campanhas do Nubank no Meta (Facebook, Instagram e Audience Network) com o objetivo de incentivar a abertura de novas contas no primeiro quatrimestre.
 
     Desta forma, devemos começar o nosso trabalho com a validação dos dados, em seguida, realizar uma análise exploratória deles e ,por fim, testar as hipóteses, produzidas na etapa anterior, e criar modelos capazes de prever o resultado das novas campanhas.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Pacotes Usados""")
+    mo.md(r"""
+    # Pacotes Usados
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     O pacotes usados nesse trabalho são:
 
     ---
@@ -87,8 +93,7 @@ def _(mo):
     - **marimo**: Framework para criar notebooks interativos e aplicações de dados em Python.
 
     ---
-    """
-    )
+    """)
     return
 
 
@@ -115,7 +120,9 @@ def _():
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Dataset""")
+    mo.md(r"""
+    # Dataset
+    """)
     return
 
 
@@ -129,8 +136,7 @@ def _(pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     O dataset tem as seguintes colunas
 
     - **Reporting Start**: Data de início do período de relatório da campanha.
@@ -150,8 +156,7 @@ def _(mo):
     - **Frequency**: Frequência média de exibição do anúncio por pessoa.
 
     e 610 linhas. Com as informações contidas nele podemos realizar uma análise completa sobre o desempenho das campanhas, mas antes de iniciar qualquer investigação necessitamos verificar a qualidade dos dados.
-    """
-    )
+    """)
     return
 
 
@@ -163,14 +168,15 @@ def _(df):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""## Validação Dos Dados""")
+    mo.md(r"""
+    ## Validação Dos Dados
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     A validação buscar encontrar erros no dataset, no nosso caso eles são
 
     - Valores ausentes.
@@ -180,8 +186,7 @@ def _(mo):
     - Valores negativos ou outros tipos de entrada incorreta.
 
     Assim, executando a análise, temos que
-    """
-    )
+    """)
     return
 
 
@@ -249,14 +254,15 @@ def _(df, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""### Resultados""")
+    mo.md(r"""
+    ### Resultados
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     Verifico-se que no dataset
 
     ✅ Não há valores faltantes no dataset.
@@ -264,21 +270,21 @@ def _(mo):
     ✅ Não há linhas repetidas no dataset.
 
     ✅ Não há valores negativos no dataset.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Criação De Novas Features""")
+    mo.md(r"""
+    # Criação De Novas Features
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     O conjunto de dados traz uma série de informações úteis sobre o desempenho das campanhas, mas podemos torná-lo mais rico ao construir novas features com base nas já existentes. As novas features são:
 
     - CTR = Link Clicks / Impressions
@@ -301,8 +307,7 @@ def _(mo):
     - ad_name_students
 
     Cada uma contendo o valor 1, que representa as características do ad set e do ad.
-    """
-    )
+    """)
     return
 
 
@@ -458,14 +463,15 @@ def _(df, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Análise Exploratária Dos Dados""")
+    mo.md(r"""
+    # Análise Exploratária Dos Dados
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     Antes de tomar qualquer decisão ou construir um modelo, é fundamental realizar uma análise exploratória dos dados. Essa etapa tem como objetivo principal aprofundar o conhecimento sobre o conjunto disponível e validar hipóteses já existentes.
 
     Como o propósito do trabalho é identificar quais campanhas apresentam melhor performance, esse será o nosso foco. O primeiro passo, portanto, consiste em definir as métricas que traduzem o desempenho de uma campanha.
@@ -485,29 +491,28 @@ def _(mo):
     - apresentam a melhor relação \(\frac{LTV}{CPA}\), ou seja, maior valor de vida útil por custo de aquisição.
 
     Porém como não é possível calcular o **LTV** com os dados a que temos acesso, temos que minimizar o **CPA** para maximizar o segundo indicado.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""## Desempenho Agregado Das Campanhas""")
+    mo.md(r"""
+    ## Desempenho Agregado Das Campanhas
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     Começamos a análise com o estudo dos tipos de campanhas, que são
 
     - **Branding**: voltado para aumentar o reconhecimento da marca e reforçar sua mensagem.
     - **E-commerce (D&R)**: focado exclusivamente em gerar uma ação específica — no nosso caso, a abertura de conta.
 
     Onde as métricas **CTR, CPC, CVR, CPA e CPM** serão comparadas entre os dois grupos, com o objetivo de identificar qual tipo de anúncio apresenta melhor desempenho. No histograma do **CPR**, temos
-    """
-    )
+    """)
     return
 
 
@@ -539,9 +544,9 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""que campanhas do tipo E-commerce producem mais clicks. Já no caso do CPC, CVR, CPA e CPM, temos"""
-    )
+    mo.md(r"""
+    que campanhas do tipo E-commerce producem mais clicks. Já no caso do CPC, CVR, CPA e CPM, temos
+    """)
     return
 
 
@@ -607,9 +612,9 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""Novamente as campanhas do tipo E-commerce se mostraram superiores, em especial na comparação do **CPA**, onde há uma clara diferença entre as duas. Estudando a relação entre o **CPA** e frequência, temos"""
-    )
+    mo.md(r"""
+    Novamente as campanhas do tipo E-commerce se mostraram superiores, em especial na comparação do **CPA**, onde há uma clara diferença entre as duas. Estudando a relação entre o **CPA** e frequência, temos
+    """)
     return
 
 
@@ -698,28 +703,28 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     Vemos que o **CPA** permanece constante conforme a frequência varia, no intervalo, para ambos os tipos de campanhas e que campanhas do tipo E-commerce possuem **CPA** menor que as de braiding em qualquer frequência. Juntando as informações, conclui-se que
 
     - As campanhas de D&R são superiores em todas as métricas analisadas, em especial no caso do **CPA**
     - Não há frequência de saturação no intervalo observado para ambos os tipos de campanha.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""## Performace Por 1k De impressões e Reaches""")
+    mo.md(r"""
+    ## Performace Por 1k De impressões e Reaches
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""A análise inicial já indica que as campanhas de D&R apresentam desempenho superior em relação às de branding. No entanto, ainda é necessário aprofundar o estudo nas métricas de volume e nos modelos de atribuição para tomar uma decisão definitiva. Ao avaliar os resultados pelas métricas de volume e pelos diferentes modelos de atribuição, observamos"""
-    )
+    mo.md(r"""
+    A análise inicial já indica que as campanhas de D&R apresentam desempenho superior em relação às de branding. No entanto, ainda é necessário aprofundar o estudo nas métricas de volume e nos modelos de atribuição para tomar uma decisão definitiva. Ao avaliar os resultados pelas métricas de volume e pelos diferentes modelos de atribuição, observamos
+    """)
     return
 
 
@@ -819,13 +824,11 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     A análise dos gráficos mostra que as campanhas com o modelo de atribuição *7-day click, 1-day view* apresentam melhor desempenho. Resultado já esperado, uma vez que a janela de atribuição é significativamente maior do que a utilizada pelo concorrente. Também era previsível que as campanhas de D&R superassem as de branding.
 
     No entanto, observa-se que a performance de ambos os tipos de campanha não demonstra qualquer tendência consistente ao longo do tempo. Além disso, não há correlação entre a frequência e as conversões por mil impressões. Já ao avaliar os resultados por mil *reaches*, verificamos que
-    """
-    )
+    """)
     return
 
 
@@ -924,37 +927,41 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""Que os resultados permanecem identicos, com novamente as campanhas de D&R tendo melhor perfomace em todos os paramêntros"""
-    )
+    mo.md(r"""
+    Que os resultados permanecem identicos, com novamente as campanhas de D&R tendo melhor perfomace em todos os paramêntros
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""### Resultados""")
+    mo.md(r"""
+    ### Resultados
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""A primeira parte da análise exploratória já trouxe um resultado claro: a superioridade das campanhas D&R sobre Branding em todas as métricas. Desta forma, o primeiro insight é fazer uso apenas de campanhas D&R para maximizar o volume de contas abertas com o menor custo. Com a exploração no nível de campanha encerrada, seguimos para o nível dos ads set e ads."""
-    )
+    mo.md(r"""
+    A primeira parte da análise exploratória já trouxe um resultado claro: a superioridade das campanhas D&R sobre Branding em todas as métricas. Desta forma, o primeiro insight é fazer uso apenas de campanhas D&R para maximizar o volume de contas abertas com o menor custo. Com a exploração no nível de campanha encerrada, seguimos para o nível dos ads set e ads.
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""## Análise De AD Sets""")
+    mo.md(r"""
+    ## Análise De AD Sets
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""Na análise dos ad sets buscamos encontrar quais características reduzem/aumenta o CPA da campanha. Pelos gráficos abaixo, vemos"""
-    )
+    mo.md(r"""
+    Na análise dos ad sets buscamos encontrar quais características reduzem/aumenta o CPA da campanha. Pelos gráficos abaixo, vemos
+    """)
     return
 
 
@@ -1018,8 +1025,7 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     Que as propriedades do ad set não possuem grande influência no CPA, o que não reduz a importância da análise, pois a otimização de uma campanha se dá por meio de pequenos passos. Sendo as características que aumentam o **CPA**:
 
     - campanhas lookalike
@@ -1033,8 +1039,7 @@ def _(mo):
     - trazer usuários dos concorrentes.
 
     com um **CPA** médio de $3$ reais menor. Olhando para o 25% top quartil e o inferior, temos
-    """
-    )
+    """)
     return
 
 
@@ -1129,13 +1134,17 @@ def _(df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""## Análise De Creativos""")
+    mo.md(r"""
+    ## Análise De Creativos
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""Para os criativos repetimos o mesmo processo, onde encontramos""")
+    mo.md(r"""
+    Para os criativos repetimos o mesmo processo, onde encontramos
+    """)
     return
 
 
@@ -1199,8 +1208,7 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     que ads com foco
 
     - em bônus
@@ -1214,8 +1222,7 @@ def _(mo):
     - conta digital
 
     possuem o **CPA** $7$ reais mais baixo na média. E novamente não há uma grande diferença entre tipos de criativos. Olhando o top e bottom quartil, temos
-    """
-    )
+    """)
     return
 
 
@@ -1312,28 +1319,31 @@ def _(df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""### Resultados""")
+    mo.md(r"""
+    ### Resultados
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""As configurações no nível de ad sets e criativos não geram tanto impacto quanto as do nível de campanha; entretanto, a escolha dos atributos certos é um importante passo na otimização das próximas campanhas."""
-    )
+    mo.md(r"""
+    As configurações no nível de ad sets e criativos não geram tanto impacto quanto as do nível de campanha; entretanto, a escolha dos atributos certos é um importante passo na otimização das próximas campanhas.
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""## Teste De Hipóteses:""")
+    mo.md(r"""
+    ## Teste De Hipóteses:
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     A nossa análise foi capaz de produzir uma série de insights de grande utilidade para o lançamento e otimização das próximas campanhas, porém é preciso testar se esses resultados são de fato válidos. Para tanto, precisamos realizar testes para validá-los. Os principais pontos que precisam ser testados são:
 
     - Campanhas de branding estão contribuindo indiretamente para a performance das campanhas de D&R?
@@ -1341,8 +1351,7 @@ def _(mo):
     - Há algum efeito de interação entre os atributos do ad set e dos ads?
 
     Para testar a primeira hipótese usamos um gráfico de regressão parcial para visualizar o efeito das campanhas de branding sobre as de D&R. Este tipo de gráfico é usado para mostrar a relação entre duas variáveis controlando outras, no nosso caso, buscamos a saber qual é a relação entre uma variável exógena, **CPA**, e uma endógena, diferença em dias entre o começo das campanhas (início branding - início D&R), controlando pelo número de campanhas ativas dentro desse intervalo. O seu funcionamento é bastante simples: para remover a influência da variável que queremos controlar, realiza-se uma regressão entre esta e a exógena e outra com a endógena; então, usam-se os resíduos dessas regressões para encontrar a relação entre variáveis. Assim, temos
-    """
-    )
+    """)
     return
 
 
@@ -1510,21 +1519,22 @@ def linear_regression(LinearRegression, alt, df_cross, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     O gráfico, que no eixo X mostra a diferença em dias entre inicil campanha D&R - inicil campanha Branding controlado pelo n° de campanhas de branding, mostra a existência de uma pequena influência possitiva das campanhas de branding sobre a performance de D&R. Quando esta começa um pouco depois de uma campanha de branding, tende a ter o **CPA** um pouco melhor, mas podemos ignorar este efeito, já que ele é de apenas $≃0.03$.
 
     No caso da atribuição, o problema é semelhante: como a janela de atribuição é bem maior no caso do 7 days view, one day click, uma conversão tem maior probabilidade de ser erroneamente atribuída. Para solucionar esse problema, devemos isolar o efeito de cada atribuição para saber qual é o melhor método de atribuição. Nesse caso, só olharemos para as campanhas de D&R, que serão divididas em dois grupos: Ambos utilizam o mesmo método de atribuição (one day view, seven days click). A diferença é que um deles não possui campanhas com atribuição de 1-day click dentro da sua janela, enquanto o outro possui. Se houver variação no CPA entre os grupos, isso indicará um possível erro na atribuição. Também será construído um segundo gráfico com as campanhas de D&R com o tipo de atribuição 1-day view, 7-day click, com o **CPA** agrupado pelo dia em que começaram as campanhas com o outro tipo de atribuição.
-    """
-    )
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(alt):
+    alt.data_transformers.enable("vegafusion")
     return
 
 
 @app.cell(hide_code=True)
 def _(alt, df_new, mo, pl):
-    alt.data_transformers.enable("vegafusion")
-
-
     def gerar_boxplots(df_new: pl.DataFrame):
         # Filtrar datasets
         df_1_day = df_new.filter(pl.col("Attribution_Setting") == "1-day click")
@@ -1578,8 +1588,7 @@ def _(alt, df_new, mo, pl):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     Pelos gráficos acima, vemos que não existe atribuição incorreta, já que não há diferença entre o CPA médio para campanhas com atribuição 1 day view 7 days click que possuem campanhas do tipo 1 day click dentro da sua janela de atribuição. Desta forma excluímos essa hipótese. No caso da última hipótese podemos testá-la dividindo o dataset em quatro grupos:
 
     - Ad sets que estão no top/bottom $25$% quartil em relação ao CPA.
@@ -1604,8 +1613,7 @@ def _(mo):
     $$
 
     há conflito entre eles, e quando esse é nulo, não existe qualquer interação. Dessa forma, temos
-    """
-    )
+    """)
     return
 
 
@@ -1810,22 +1818,23 @@ def _(alt, df_new, mo, pl, smf):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""O gráfico evidencia o comportamento de cada grupo, acompanhado do valor do termo de interação, que é igual a zero. Esse resultado indica que os atributos no nível dos ad sets e dos próprios ads contribuem de forma independente para o desempenho da campanha."""
-    )
+    mo.md(r"""
+    O gráfico evidencia o comportamento de cada grupo, acompanhado do valor do termo de interação, que é igual a zero. Esse resultado indica que os atributos no nível dos ad sets e dos próprios ads contribuem de forma independente para o desempenho da campanha.
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""### Resultados""")
+    mo.md(r"""
+    ### Resultados
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     Todas as hipóteses se mostraram inválidas
 
     ❌ Campanhas de branding estão contribuindo indiretamente para a performance das campanhas de D&R
@@ -1835,27 +1844,29 @@ def _(mo):
     ❌ Existe efeito de interação entre os tributos do ad set e ad
 
     Resultado que valida os insights obtidos ao longo do trabalho.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""---""")
+    mo.md(r"""
+    ---
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Resultado Final:""")
+    mo.md(r"""
+    # Resultado Final:
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     #### 🎯 Objetivo Principal
     O trabalho teve como objetivo realizar uma análise sobre as campanhas de marketing do Nubank na Meta, buscando compreender padrões, relações e possíveis fatores relevantes para o problema de negócio. A meta era transformar dados brutos em informações úteis, capazes de apoiar decisões estratégicas e comprovar hipóteses para etapas posteriores de modelagem ou tomada de decisão.
 
@@ -1890,8 +1901,7 @@ def _(mo):
     - **set**: Escolher os atributos corretos reduz o **CPA** em aproximadamente $8$ reais.
 
     ---
-    """
-    )
+    """)
     return
 
 
