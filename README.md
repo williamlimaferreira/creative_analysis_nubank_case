@@ -4,7 +4,7 @@
 
 Análise Exploratória de Dados das campanhas de Marketing do Nubank na Meta (Facebook/Instagram Ads).
 
-Abrir no [![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/github/williamlimaferreira/creative_analysis_nubank_case/blob/main/apps/campaign_analysis_nubank.py/server)
+[![Open in molab](https://molab.marimo.io/molab-shield.svg)](https://molab.marimo.io/github/williamlimaferreira/creative_analysis_nubank_case/blob/main/apps/campaign_analysis_nubank.py)
 
 ------------------------------------------------------------------------
 
